@@ -16,6 +16,7 @@ namespace DiSounds.Managers
     {
         private readonly Config _config;
         private readonly SiraLog _siraLog;
+        private readonly AudioClip _defaultClip;
         private readonly BasicUIAudioManager _basicUIAudioManager;
         private readonly CachedMediaAsyncLoader _cachedMediaAsyncLoader;
         private readonly CancellationTokenSource _cancellationTokenSource;
@@ -35,6 +36,7 @@ namespace DiSounds.Managers
 
             initManager.Add(this);
             disposeManager.Add(this);
+            _defaultClip = AudioClips(ref basicUIAudioManager)[0];
         }
 
         public async void Initialize()
@@ -69,7 +71,7 @@ namespace DiSounds.Managers
             stopwatch.Stop();
             _siraLog.Debug($"Finished Loading Audio Clips in {stopwatch.Elapsed} seconds");
 
-            RecalculatePitch();
+            Refresh();
         }
 
         public void Dispose()
@@ -81,7 +83,10 @@ namespace DiSounds.Managers
         {
             var manager = _basicUIAudioManager;
             var clips = AudioClips(ref manager).ToList();
-            clips.Add(value);
+            if (!clips.Contains(value))
+            {
+                clips.Add(value);
+            }
 
             Set(clips.ToArray());
         }
@@ -102,7 +107,27 @@ namespace DiSounds.Managers
         public void Refresh()
         {
             _siraLog.Debug("Refreshing...");
+
+            var manager = _basicUIAudioManager;
+            if (!_config.MenuClicksEnabled)
+            {
+                var def = new AudioClip[] { _defaultClip };
+                AudioClips(ref manager) = def;
+                Min(ref manager) = 0.95f;
+                Max(ref manager) = 1.05f;
+                Set(def);
+                return;
+            }
+
             RecalculatePitch();
+            if (_config.UseMenuDefault)
+            {
+                Add(_defaultClip);
+            }
+            else
+            {
+                Remove(_defaultClip);
+            }
         }
 
         private void RecalculatePitch()

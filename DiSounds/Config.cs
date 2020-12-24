@@ -19,7 +19,7 @@ namespace DiSounds
         public virtual List<FileInfo> EnabledMenuClicks { get; set; } = new List<FileInfo>();
 
         public virtual bool MenuClicksEnabled { get; set; } = false;
-        public virtual bool UseMenuDefault { get; set; } = false;
+        public virtual bool UseMenuDefault { get; set; } = true;
         public virtual bool DoMenuPitch { get; set; } = true;
         public virtual float MinPitch { get; set; } = 0.95f;
         public virtual float MaxPitch { get; set; } = 1.05f;
