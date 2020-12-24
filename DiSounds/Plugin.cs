@@ -25,6 +25,7 @@ namespace DiSounds
                 .On<PCAppInit>()
                 .Pseudo(Container =>
                 {
+                    log?.Debug("Initializing Core Bindings");
                     Container.BindLoggerAsSiraLogger(log);
                     Container.BindInstance(config).AsSingle();
                 });
@@ -34,7 +35,7 @@ namespace DiSounds
                 .Register<SoundMenuInstaller>()
                 .Pseudo((ctx, Container) =>
                 {
-                    // Wrapper
+                    log?.Debug("Upgrading to our DiPlayer");
                     var binding = ctx.GetComponent<ZenjectBinding>();
                     var original = (binding.Components.FirstOrDefault(x => x is SongPreviewPlayer) as SongPreviewPlayer)!;
                     var fader = original.GetComponent<FadeOutSongPreviewPlayerOnSceneTransitionStart>();
@@ -45,6 +46,7 @@ namespace DiSounds
                     Container.Bind(typeof(SongPreviewPlayer), typeof(DiSongPreviewPlayer)).To<DiSongPreviewPlayer>().FromInstance(newPlayer).AsSingle();
                     fader.SetField<FadeOutSongPreviewPlayerOnSceneTransitionStart, SongPreviewPlayer>("_songPreviewPlayer", newPlayer);
 
+                    log?.Debug("Exposing UI Audio Manager");
                     Container.Bind<BasicUIAudioManager>().FromInstance(ctx.GetRootGameObjects().ElementAt(0).GetComponent<BasicUIAudioManager>()).AsSingle();
                 });
         }
