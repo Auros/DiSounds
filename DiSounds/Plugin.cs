@@ -39,6 +39,8 @@ namespace DiSounds
                     Container.Unbind<SongPreviewPlayer>();
                     Container.Bind(typeof(SongPreviewPlayer), typeof(DiSongPreviewPlayer)).To<DiSongPreviewPlayer>().FromInstance(newPlayer).AsSingle();
                     fader.SetField<FadeOutSongPreviewPlayerOnSceneTransitionStart, SongPreviewPlayer>("_songPreviewPlayer", newPlayer);
+
+                    Container.Bind<BasicUIAudioManager>().FromInstance(ctx.GetRootGameObjects().ElementAt(0).GetComponent<BasicUIAudioManager>()).AsSingle();
                 });
         }
 
