@@ -14,12 +14,9 @@ namespace DiSounds
     [Plugin(RuntimeOptions.DynamicInit), Slog]
     public class Plugin
     {
-        public static IPALogger? LogT;
-
         [Init]
         public Plugin(IPALogger log, Zenjector zenjector)
         {
-            LogT = log;
             zenjector
                 .On<PCAppInit>()
                 .Pseudo(Container => Container.BindLoggerAsSiraLogger(log));
