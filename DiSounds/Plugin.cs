@@ -4,9 +4,11 @@ using SiraUtil;
 using System.Linq;
 using IPA.Utilities;
 using SiraUtil.Zenject;
-using SiraUtil.Attributes;
+using IPA.Config.Stores;
 using DiSounds.Installers;
 using DiSounds.Components;
+using SiraUtil.Attributes;
+using Conf = IPA.Config.Config;
 using IPALogger = IPA.Logging.Logger;
 
 namespace DiSounds
@@ -15,11 +17,17 @@ namespace DiSounds
     public class Plugin
     {
         [Init]
-        public Plugin(IPALogger log, Zenjector zenjector)
+        public Plugin(Conf conf, IPALogger log, Zenjector zenjector)
         {
+            var config = conf.Generated<Config>();
+
             zenjector
                 .On<PCAppInit>()
-                .Pseudo(Container => Container.BindLoggerAsSiraLogger(log));
+                .Pseudo(Container =>
+                {
+                    Container.BindLoggerAsSiraLogger(log);
+                    Container.BindInstance(config).AsSingle();
+                });
 
             zenjector
                 .On<MenuInstaller>()

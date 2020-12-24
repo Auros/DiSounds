@@ -37,6 +37,10 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <Reference Include="SemVer">
+          <HintPath>$(BeatSaberDir)\Libs\SemVer.dll</HintPath>
+          <Private>False</Private>
+        </Reference>
         <Reference Include="SiraUtil">
           <HintPath>$(BeatSaberDir)\Plugins\SiraUtil.dll</HintPath>
           <Private>False</Private>
