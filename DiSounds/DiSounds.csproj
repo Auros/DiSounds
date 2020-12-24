@@ -108,9 +108,9 @@
     </ItemGroup>
     
     <ItemGroup>
-        <None Include="Directory.Build.props" Condition="Exists('Directory.Build.props')" />
-        <None Include="Directory.Build.targets" Condition="Exists('Directory.Build.targets')" />
-        <None Include="DiSounds.csproj.user" Condition="Exists('DiSounds.csproj.user')" />
+        <None Include="DiSounds.csproj.user" Condition="Exists('DiSounds.csproj.user')" Visible="false" />
+        <None Include="Directory.Build.props" Condition="Exists('Directory.Build.props')" Visible="false" />
+        <None Include="Directory.Build.targets" Condition="Exists('Directory.Build.targets')" Visible="false" />
     </ItemGroup>
 
     <ItemGroup>
