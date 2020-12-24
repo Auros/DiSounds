@@ -12,10 +12,10 @@ namespace DiSounds
 {
     internal class Config
     {
-        [UseConverter(typeof(VersionConverter))]
+        [NonNullable, UseConverter(typeof(VersionConverter))]
         public virtual Version Version { get; set; } = new Version("0.0.0");
 
-        [UseConverter(typeof(ListConverter<FileInfo, FileInfoConverter>))]
+        [NonNullable, UseConverter(typeof(ListConverter<FileInfo, FileInfoConverter>))]
         public virtual List<FileInfo> EnabledMenuClicks { get; set; } = new List<FileInfo>();
 
         public virtual bool MenuClicksEnabled { get; set; } = false;

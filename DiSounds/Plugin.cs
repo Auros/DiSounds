@@ -10,6 +10,7 @@ using DiSounds.Components;
 using SiraUtil.Attributes;
 using Conf = IPA.Config.Config;
 using IPALogger = IPA.Logging.Logger;
+using IPA.Loader;
 
 namespace DiSounds
 {
@@ -17,9 +18,10 @@ namespace DiSounds
     public class Plugin
     {
         [Init]
-        public Plugin(Conf conf, IPALogger log, Zenjector zenjector)
+        public Plugin(Conf conf, IPALogger log, Zenjector zenjector, PluginMetadata metadata)
         {
             var config = conf.Generated<Config>();
+            config.Version = metadata.Version;
 
             zenjector
                 .On<PCAppInit>()
@@ -47,7 +49,13 @@ namespace DiSounds
                     fader.SetField<FadeOutSongPreviewPlayerOnSceneTransitionStart, SongPreviewPlayer>("_songPreviewPlayer", newPlayer);
 
                     log?.Debug("Exposing UI Audio Manager");
-                    Container.Bind<BasicUIAudioManager>().FromInstance(ctx.GetRootGameObjects().ElementAt(0).GetComponent<BasicUIAudioManager>()).AsSingle();
+                    var am = ctx.GetRootGameObjects().ElementAt(0).GetComponentInChildren<BasicUIAudioManager>();
+                    Container.Bind<BasicUIAudioManager>().FromInstance(am).AsSingle();
+                })
+                .Initialized((ctx, Container) =>
+                {
+                    var manager = Container.ResolveId<SiraUtil.Interfaces.IRegistrar<UnityEngine.AudioClip>>(nameof(Managers.DiClickManager));
+                    
                 });
         }
 
