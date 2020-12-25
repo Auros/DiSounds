@@ -37,6 +37,18 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <None Remove="Resources\pixel.png" />
+      <None Remove="Resources\preview.png" />
+      <None Remove="Views\audio-view.bsml" />
+      <None Remove="Views\click-view.bsml" />
+      <None Remove="Views\info-view.bsml" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <Reference Include="BSML">
+          <HintPath>$(BeatSaberDir)\Plugins\BSML.dll</HintPath>
+          <Private>False</Private>
+        </Reference>
         <Reference Include="MediaLoader">
           <HintPath>$(BeatSaberDir)\Beat Saber_Data\Managed\MediaLoader.dll</HintPath>
           <Private>False</Private>
@@ -113,6 +125,11 @@
 
     <ItemGroup>
         <EmbeddedResource Include="manifest.json" />
+        <EmbeddedResource Include="Resources\pixel.png" />
+        <EmbeddedResource Include="Resources\preview.png" />
+        <EmbeddedResource Include="Views\audio-view.bsml" />
+        <EmbeddedResource Include="Views\click-view.bsml" />
+        <EmbeddedResource Include="Views\info-view.bsml" />
     </ItemGroup>
 
     <ItemGroup>	

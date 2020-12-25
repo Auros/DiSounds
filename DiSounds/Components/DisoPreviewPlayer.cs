@@ -4,7 +4,7 @@ using SiraUtil.Tools;
 
 namespace DiSounds.Components
 {
-    public class DiSongPreviewPlayer : SongPreviewPlayer
+    public class DisoPreviewPlayer : SongPreviewPlayer
     {
         private SiraLog _siraLog = null!;
 

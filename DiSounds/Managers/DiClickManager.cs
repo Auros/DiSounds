@@ -12,7 +12,7 @@ using System.Collections.Generic;
 
 namespace DiSounds.Managers
 {
-    internal class DiClickManager : IRegistrar<AudioClip>, IInitializable, IDisposable, IRefreshable
+    internal class DiClickManager : IRegistrar<AudioClip>, IInitializable, IDisposable, IRefreshable, IToggleable
     {
         private readonly Config _config;
         private readonly SiraLog _siraLog;
@@ -25,6 +25,12 @@ namespace DiSounds.Managers
         private static readonly FieldAccessor<BasicUIAudioManager, float>.Accessor Max = FieldAccessor<BasicUIAudioManager, float>.GetAccessor("_maxPitch");
         private static readonly FieldAccessor<BasicUIAudioManager, AudioClip[]>.Accessor AudioClips = FieldAccessor<BasicUIAudioManager, AudioClip[]>.GetAccessor("_clickSounds");
         private static readonly FieldAccessor<BasicUIAudioManager, RandomObjectPicker<AudioClip>>.Accessor RandomAudioPicker = FieldAccessor<BasicUIAudioManager, RandomObjectPicker<AudioClip>>.GetAccessor("_randomSoundPicker");
+
+        public bool Status
+        {
+            get => _basicUIAudioManager.enabled;
+            set => _basicUIAudioManager.enabled = value;
+        }
 
         public DiClickManager(Config config, SiraLog siraLog, BasicUIAudioManager basicUIAudioManager, CachedMediaAsyncLoader cachedMediaAsyncLoader, InitializableManager initManager, DisposableManager disposeManager)
         {

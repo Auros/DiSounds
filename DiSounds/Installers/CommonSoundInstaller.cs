@@ -5,7 +5,7 @@ using SiraUtil.Interfaces;
 
 namespace DiSounds.Installers
 {
-    internal class SoundMenuInstaller : Installer
+    internal class CommonSoundInstaller : Installer
     {
         public override void InstallBindings()
         {
