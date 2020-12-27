@@ -20,6 +20,7 @@ namespace DiSounds.UI
         internal static readonly FieldAccessor<ImageView, float>.Accessor ImageSkew = FieldAccessor<ImageView, float>.GetAccessor("_skew");
 
         public bool Enabled { get; private set; }
+        public bool Initialized => coverArt != null;
 
         public event Action? Paused;
         public event Action? Resumed;
@@ -77,7 +78,7 @@ namespace DiSounds.UI
         {
             CoverHint = name;
             _songLength = clipLength;
-            var blurTex = _kawaseBlurRenderer.Blur(texture, KawaseBlurRendererSO.KernelSize.Kernel63, 2);
+            var blurTex = _kawaseBlurRenderer.Blur(texture, KawaseBlurRendererSO.KernelSize.Kernel7, 2);
             coverArt.sprite = Sprite.Create(blurTex, new Rect(0f, 0f, blurTex.width, blurTex.height), new Vector2(0.5f, 0.5f), 1024 >> 2, 0U, SpriteMeshType.FullRect, Vector4.zero, false);
             playPauseImage.sprite = playing ? _pauseSprite : _playSprite;
         }
@@ -85,7 +86,6 @@ namespace DiSounds.UI
         public void SetTime(float time)
         {
             CurrentSongTime = time;
-
         }
 
         #region Events
@@ -116,12 +116,12 @@ namespace DiSounds.UI
             if (playPauseImage.sprite == _playSprite)
             {
                 playPauseImage.sprite = _pauseSprite;
-                Paused?.Invoke();
+                Resumed?.Invoke();
             }
             else
             {
                 playPauseImage.sprite = _playSprite;
-                Resumed?.Invoke();
+                Paused?.Invoke();
             }
         }
 
@@ -169,7 +169,7 @@ namespace DiSounds.UI
         protected int Scrub => _songLength == 0 ? -30 : (int)Mathf.Lerp(-30f, 30f, _currentSongTime / _songLength);
 
         [UIValue("time-text")]
-        protected string TimeText => $"{string.Format("{0}:{1:00}", CurrentSongTime / 60, CurrentSongTime % 60)} / {string.Format("{0}:{1:00}", _songLength / 60, _songLength % 60)}";
+        protected string TimeText => $"{string.Format("{0}:{1:00}", (int)(CurrentSongTime / 60), CurrentSongTime % 60)} / {string.Format("{0}:{1:00}", (int)(_songLength / 60), _songLength % 60)}";
 
         #endregion
 

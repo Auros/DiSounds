@@ -62,7 +62,7 @@ namespace DiSounds
                 })
                 .Initialized((ctx, Container) =>
                 {
-                    var manager = Container.ResolveId<SiraUtil.Interfaces.IRegistrar<UnityEngine.AudioClip>>(nameof(Managers.DiClickManager));
+                    var manager = Container.ResolveId<SiraUtil.Interfaces.IRegistrar<AudioClip>>(nameof(Managers.DiClickManager));
                 });
 
         }

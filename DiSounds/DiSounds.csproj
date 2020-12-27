@@ -42,6 +42,7 @@
       <None Remove="Resources\pixel.png" />
       <None Remove="Resources\play.png" />
       <None Remove="Resources\prev.png" />
+      <None Remove="Resources\question.png" />
       <None Remove="Resources\volume.png" />
       <None Remove="Views\audio-view.bsml" />
       <None Remove="Views\click-view.bsml" />
@@ -143,6 +144,7 @@
         <EmbeddedResource Include="Resources\pixel.png" />
         <EmbeddedResource Include="Resources\play.png" />
         <EmbeddedResource Include="Resources\prev.png" />
+        <EmbeddedResource Include="Resources\question.png" />
         <EmbeddedResource Include="Resources\volume.png" />
         <EmbeddedResource Include="Views\audio-view.bsml" />
         <EmbeddedResource Include="Views\click-view.bsml" />
