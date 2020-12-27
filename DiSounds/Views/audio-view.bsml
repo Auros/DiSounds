@@ -16,7 +16,7 @@
         </horizontal>
         <horizontal pref-width="20" spacing="1">
           <button text="~toggle-string" font-size="4" pref-width="8" hover-hint="~source" on-click="change-state" />
-          <button-with-icon icon="DiSounds.Resources.preview.png" pref-width="9" pref-height="8" on-click="preview"  />
+          <button-with-icon icon="DiSounds.Resources.play.png" pref-width="9" pref-height="8" on-click="preview"  />
         </horizontal>
       </horizontal>
     </custom-list>

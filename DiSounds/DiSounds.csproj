@@ -37,11 +37,16 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <None Remove="Resources\next.png" />
+      <None Remove="Resources\pause.png" />
       <None Remove="Resources\pixel.png" />
-      <None Remove="Resources\preview.png" />
+      <None Remove="Resources\play.png" />
+      <None Remove="Resources\prev.png" />
+      <None Remove="Resources\volume.png" />
       <None Remove="Views\audio-view.bsml" />
       <None Remove="Views\click-view.bsml" />
       <None Remove="Views\info-view.bsml" />
+      <None Remove="Views\player-panel.bsml" />
     </ItemGroup>
 
     <ItemGroup>
@@ -49,8 +54,16 @@
           <HintPath>$(BeatSaberDir)\Plugins\BSML.dll</HintPath>
           <Private>False</Private>
         </Reference>
+        <Reference Include="HMRendering">
+          <HintPath>$(BeatSaberDir)\\Beat Saber_Data\Managed\HMRendering.dll</HintPath>
+          <Private>False</Private>
+        </Reference>
         <Reference Include="MediaLoader">
           <HintPath>$(BeatSaberDir)\Beat Saber_Data\Managed\MediaLoader.dll</HintPath>
+          <Private>False</Private>
+        </Reference>
+        <Reference Include="Rendering">
+          <HintPath>$(BeatSaberDir)\\Beat Saber_Data\Managed\Rendering.dll</HintPath>
           <Private>False</Private>
         </Reference>
         <Reference Include="SemVer">
@@ -125,11 +138,16 @@
 
     <ItemGroup>
         <EmbeddedResource Include="manifest.json" />
+        <EmbeddedResource Include="Resources\next.png" />
+        <EmbeddedResource Include="Resources\pause.png" />
         <EmbeddedResource Include="Resources\pixel.png" />
-        <EmbeddedResource Include="Resources\preview.png" />
+        <EmbeddedResource Include="Resources\play.png" />
+        <EmbeddedResource Include="Resources\prev.png" />
+        <EmbeddedResource Include="Resources\volume.png" />
         <EmbeddedResource Include="Views\audio-view.bsml" />
         <EmbeddedResource Include="Views\click-view.bsml" />
         <EmbeddedResource Include="Views\info-view.bsml" />
+        <EmbeddedResource Include="Views\player-panel.bsml" />
     </ItemGroup>
 
     <ItemGroup>	

@@ -16,7 +16,7 @@
             pad="2" spacing="0.5">
     <text text="Dashboard" align="Left" font-size="7" italics="true" />
     <image src="DiSounds.Resources.pixel.png" />
-    <bool-setting text="Music Player" value="music-player" apply-on-change="true" bind-value="true" />
+    <bool-setting text="Music 💿 Player" value="music-player" apply-on-change="true" bind-value="true" />
     <bool-setting text="Menu Clicks" value="menu-clicks" apply-on-change="true" bind-value="true" />
     <bool-setting text="Intro" value="intro" apply-on-change="true" />
   </vertical>

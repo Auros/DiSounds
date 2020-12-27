@@ -3,6 +3,7 @@ using Zenject;
 using SiraUtil;
 using IPA.Loader;
 using System.Linq;
+using UnityEngine;
 using IPA.Utilities;
 using SiraUtil.Zenject;
 using IPA.Config.Stores;
@@ -11,7 +12,6 @@ using DiSounds.Components;
 using SiraUtil.Attributes;
 using Conf = IPA.Config.Config;
 using IPALogger = IPA.Logging.Logger;
-using UnityEngine;
 
 namespace DiSounds
 {

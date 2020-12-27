@@ -14,6 +14,9 @@ namespace DiSounds.Installers
             Container.Bind<DisoAudioView>().FromNewComponentAsViewController().AsSingle();
             Container.Bind<DisoClickView>().FromNewComponentAsViewController().AsSingle();
             Container.Bind<DisoFlowCoordinator>().FromNewComponentOnNewGameObject(nameof(DisoFlowCoordinator)).AsSingle();
+
+            Container.BindInterfacesTo<DisoMusicPlayer>().AsSingle();
+            Container.Bind<DisoPlayerPanel>().FromNewComponentAsViewController().AsSingle();
         }
     }
 }
