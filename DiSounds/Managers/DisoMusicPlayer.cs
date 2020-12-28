@@ -146,6 +146,10 @@ namespace DiSounds.Managers
                 _cycleTime = 0f;
                 if (_disoPreviewPlayer.PlayingDefault)
                 {
+                    if (_disoPreviewPlayer.CurrentAudioTime + 0.5f > _disoPreviewPlayer.DefaultClip.length)
+                    {
+                        MoveNext();
+                    }
                     _disoPlayerPanel.SetTime(_disoPreviewPlayer.CurrentAudioTime);
                 }
             }
