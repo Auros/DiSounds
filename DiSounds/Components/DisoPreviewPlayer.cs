@@ -84,7 +84,9 @@ namespace DiSounds.Components
                 base.CrossfadeTo(null!, _lastTrueAudioLength, -1f, _ambientVolumeScale);
                 return;
             }
-            base.CrossfadeToDefault();
+            if (_audioSources == null) return;
+            if (!_transitionAfterDelay && _activeChannel > 0 && _audioSources[_activeChannel].clip == _defaultAudioClip) return;
+            CrossfadeTo(_defaultAudioClip, _lastTrueAudioLength, -1f, _ambientVolumeScale);
         }
 
         public override void CrossfadeTo(AudioClip audioClip, float startTime, float duration, float volumeScale = 1)

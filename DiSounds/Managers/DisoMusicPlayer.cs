@@ -250,7 +250,7 @@ namespace DiSounds.Managers
         {
             if (newScene.name == "MenuCore" && !_disoPreviewPlayer.Active)
             {
-                await SiraUtil.Utilities.PauseChamp;
+                await SiraUtil.Utilities.AwaitSleep(500);
                 if (!_config.SaveTime)
                 {
                     MoveNext();

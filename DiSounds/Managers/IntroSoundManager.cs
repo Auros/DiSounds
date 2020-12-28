@@ -10,6 +10,7 @@ namespace DiSounds.Managers
 {
     internal class IntroSoundManager : IInitializable
     {
+        private bool _didPlay;
         private readonly Config _config;
         private readonly Random _random;
         private readonly SiraLog _siraLog;
@@ -31,17 +32,25 @@ namespace DiSounds.Managers
         {
             await SiraUtil.Utilities.AwaitSleep(1000);
 
-            if (_config.EnabledIntroSounds.Count > 0)
+            if (_config.EnabledIntroSounds.Count > 0 && !_didPlay)
             {
-                Stopwatch stopwatch = Stopwatch.StartNew();
+                _didPlay = true;
                 var ourLuckyIntro = _config.EnabledIntroSounds[_random.Next(0, _config.EnabledIntroSounds.Count)];
 
                 try
                 {
+                    Stopwatch stopwatch = Stopwatch.StartNew();
                     _siraLog.Debug($"Loading {ourLuckyIntro.FullName}");
                     AudioClip audioClip = await _audioClipAsyncLoader.LoadAudioClipAsync(ourLuckyIntro.FullName, _cancellationTokenSource.Token);
                     _audioSourcer.clip = audioClip;
                     _audioSourcer.Play();
+                    stopwatch.Stop();
+                    _siraLog.Debug($"Finished Loading Intro in {stopwatch.Elapsed} seconds");
+                    await SiraUtil.Utilities.AwaitSleep((int)(audioClip.length * 1000));
+                    if (_audioSourcer.clip == audioClip)
+                    {
+                        _audioSourcer.clip = null;
+                    } 
                 }
                 catch (Exception e)
                 {
@@ -49,8 +58,7 @@ namespace DiSounds.Managers
                     _config.EnabledIntroSounds.Remove(ourLuckyIntro);
                 }
 
-                stopwatch.Stop();
-                _siraLog.Debug($"Finished Loading Intro in {stopwatch.Elapsed} seconds");
+                
             }
         }
     }
