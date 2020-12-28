@@ -133,8 +133,8 @@ namespace DiSounds.UI
         [UIValue("intro")]
         protected bool Intro
         {
-            get => true;
-            set => _ = value;
+            get => _config.IntroSoundsEnabled;
+            set => _config.IntroSoundsEnabled = value;
         }
 
         #endregion

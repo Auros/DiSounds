@@ -35,6 +35,11 @@ namespace DiSounds
         public virtual float MinPitch { get; set; } = 0.95f;
         public virtual float MaxPitch { get; set; } = 1.05f;
 
+
+        [NonNullable, UseConverter(typeof(ListConverter<FileInfo, FileInfoConverter>))]
+        public virtual List<FileInfo> EnabledIntroSounds { get; set; } = new List<FileInfo>();
+        public virtual bool IntroSoundsEnabled { get; set; } = false;
+
         public enum PlaybackType
         {
             CustomSongs,

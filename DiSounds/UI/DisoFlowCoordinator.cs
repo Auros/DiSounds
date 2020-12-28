@@ -25,6 +25,7 @@ namespace DiSounds.UI
         private DisoMusicView _disoMusicView = null!;
 
         private static readonly DirectoryInfo _musicDir = new DirectoryInfo(Path.Combine(UnityGame.UserDataPath, "Di", "Sounds", "Music"));
+        private static readonly DirectoryInfo _introDir = new DirectoryInfo(Path.Combine(UnityGame.UserDataPath, "Di", "Sounds", "Intro"));
         private static readonly DirectoryInfo _clicksDir = new DirectoryInfo(Path.Combine(UnityGame.UserDataPath, "Di", "Sounds", "Clicks"));
 
         [Inject]
@@ -72,6 +73,11 @@ namespace DiSounds.UI
             if (action == Action.MusicPlayer)
             {
                 ShowMusicPlayer();
+                return;
+            }
+            if (action == Action.Intro)
+            {
+                ShowIntroSoundsMenu();
                 return;
             }
             SetLeftScreenViewController(null, ViewController.AnimationType.Out);
@@ -126,6 +132,28 @@ namespace DiSounds.UI
             SetLeftScreenViewController(_disoAudioView, ViewController.AnimationType.In);
             SetRightScreenViewController(_disoClickView, ViewController.AnimationType.In);
             _disoAudioView.For = "Menu Clicks";
+            _disoAudioView.Present(packets);
+        }
+
+        private void ShowIntroSoundsMenu()
+        {
+            List<IntroPacket> packets = new List<IntroPacket>();
+            foreach (var proj in _config.EnabledIntroSounds)
+            {
+                packets.Add(new IntroPacket(proj, true));
+            }
+            if (!_introDir.Exists) _introDir.Create();
+            foreach (var file in _introDir.EnumerateFiles())
+            {
+                if (!packets.Any(p => p.File.FullName == file.FullName))
+                {
+                    if (file.Extension == ".ogg")
+                        packets.Add(new IntroPacket(file, false));
+                }
+            }
+            SetLeftScreenViewController(_disoAudioView, ViewController.AnimationType.In);
+            SetRightScreenViewController(null, ViewController.AnimationType.Out);
+            _disoAudioView.For = "Intro Sounds";
             _disoAudioView.Present(packets);
         }
 

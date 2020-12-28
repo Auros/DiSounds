@@ -21,6 +21,10 @@ namespace DiSounds.Installers
                 Container.BindInterfacesTo<DisoMusicPlayer>().AsSingle();
                 Container.Bind<DisoPlayerPanel>().FromNewComponentAsViewController().AsSingle();
             }
+            if (config.IntroSoundsEnabled)
+            {
+                Container.BindInterfacesTo<IntroSoundManager>().AsSingle();
+            }
         }
     }
 }
