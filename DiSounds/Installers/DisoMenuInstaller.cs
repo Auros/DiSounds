@@ -14,6 +14,7 @@ namespace DiSounds.Installers
             Container.Bind<DisoAudioView>().FromNewComponentAsViewController().AsSingle();
             Container.Bind<DisoClickView>().FromNewComponentAsViewController().AsSingle();
             Container.Bind<DisoMusicView>().FromNewComponentAsViewController().AsSingle();
+            Container.Bind<HighwayTutorialSystem>().FromNewComponentAsViewController().AsSingle();
             Container.Bind<DisoFlowCoordinator>().FromNewComponentOnNewGameObject(nameof(DisoFlowCoordinator)).AsSingle();
             var config = Container.Resolve<Config>();
             if (config.MusicPlayerEnabled)

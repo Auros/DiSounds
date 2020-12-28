@@ -30,8 +30,9 @@
     <image src="DiSounds.Resources.pixel.png" />
 
     <horizontal>
-      <button text="FAQ" on-click="faq" pref-width="20" pref-height="12" />
-      <button text="Reset" on-click="reset" pref-width="20" pref-height="12" />
+      <button text="FAQ" on-click="faq" pref-height="12" />
+      <button text="Tutorial" on-click="tutorial" pref-height="12" />
+      <button text="Reset" on-click="reset" pref-height="12" />
     </horizontal>
 
   </vertical>

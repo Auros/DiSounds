@@ -24,6 +24,9 @@ namespace DiSounds.UI
         [Inject]
         protected readonly MenuTransitionsHelper menuTransitionsHelper = null!;
 
+        [UIValue("version")]
+        protected string Version => $"Mod Version: {_config.Version}";
+
         #region BSML
 
         [UIParams]
@@ -40,13 +43,6 @@ namespace DiSounds.UI
 
         #endregion
 
-        #region Info Window
-
-        [UIValue("version")]
-        protected string Version => $"Mod Version: {_config.Version}";
-
-        #endregion
-
         #region Help Window
 
         [UIAction("faq")]
@@ -59,6 +55,17 @@ namespace DiSounds.UI
                 "<b><u>What file types are supported?</u></b>\n" +
                 "- Only .ogg files are supported for all audio files.\n"
                 , delegate () { parserParams.EmitEvent("hide-yn"); } , TextAlignmentOptions.TopLeft);
+            parserParams.EmitEvent("show-yn");
+        }
+
+        [UIAction("tutorial")]
+        protected void Tutorial()
+        {
+            SetModal("Are you sure you want to start the tutorial?", delegate ()
+            {
+                ActionClicked?.Invoke(DisoFlowCoordinator.Action.Tutorial);
+                parserParams.EmitEvent("hide-yn");
+            });
             parserParams.EmitEvent("show-yn");
         }
 

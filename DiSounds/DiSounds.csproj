@@ -46,6 +46,7 @@
       <None Remove="Resources\volume.png" />
       <None Remove="Views\audio-view.bsml" />
       <None Remove="Views\click-view.bsml" />
+      <None Remove="Views\highway-tutorial.bsml" />
       <None Remove="Views\info-view.bsml" />
       <None Remove="Views\music-view.bsml" />
       <None Remove="Views\player-panel.bsml" />
@@ -149,6 +150,7 @@
         <EmbeddedResource Include="Resources\volume.png" />
         <EmbeddedResource Include="Views\audio-view.bsml" />
         <EmbeddedResource Include="Views\click-view.bsml" />
+        <EmbeddedResource Include="Views\highway-tutorial.bsml" />
         <EmbeddedResource Include="Views\info-view.bsml" />
         <EmbeddedResource Include="Views\music-view.bsml" />
         <EmbeddedResource Include="Views\player-panel.bsml" />

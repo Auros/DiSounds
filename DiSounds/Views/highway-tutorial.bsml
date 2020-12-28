@@ -1,0 +1,16 @@
+﻿<vertical bg="round-rect-panel" bg-color="white" pad="2" horizontal-fit="PreferredSize" vertical-fit="PreferredSize" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="https://monkeymanboy.github.io/BSML-Docs/ https://raw.githubusercontent.com/monkeymanboy/BSML-Docs/gh-pages/BSMLSchema.xsd">
+  <horizontal horizontal-fit="PreferredSize" vertical-fit="PreferredSize">
+    <horizontal active="~show-arrow" pref-width="10" pref-height="10">
+      <image src="DiSounds.Resources.prev.png" preserve-aspect="true" pref-width="10" pref-height="10" />
+    </horizontal>
+    <horizontal pref-width="25">
+      <text text="~text" align="Bottom" font-size="4" />
+    </horizontal>
+  </horizontal>
+  <horizontal pref-height="10" horizontal-fit="PreferredSize" vertical-fit="PreferredSize" spacing="2">
+    <page-button dir="Left" on-click="move-prev" />
+    <page-button dir="Right" on-click="move-next" />
+    <text text="~pos" align="Center" font-size="3" />
+    <button text="End" on-click="disable" />
+  </horizontal>
+</vertical>
