@@ -145,6 +145,9 @@ namespace DiSounds.UI
             MusicPlayer,
             MenuClicks,
             Intro,
+
+            Reset,
+            Tutorial
         }
     }
 }

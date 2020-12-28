@@ -41,6 +41,11 @@ namespace DiSounds
             CustomFiles
         }
 
+        public virtual void CopyFrom(Config _)
+        {
+
+        }
+
         public virtual void Changed()
         {
             Updated?.Invoke(this);

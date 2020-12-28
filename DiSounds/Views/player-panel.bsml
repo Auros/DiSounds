@@ -16,7 +16,7 @@
   </horizontal>
 
   <modal size-delta-x="40" size-delta-y="7" show-event="show-vol" hide-event="hide-vol" clickerino-offerino-closerino="true">
-    <slider-setting id="slider" min="0" max="1" anchor-pos-y="0" apply-on-change="true" on-change="volume-update" formatter="percent-formatter" value="volume" />
+    <slider-setting id="slider" min="0" max="1" increment="0.05" anchor-pos-y="0" apply-on-change="true" on-change="volume-update" formatter="percent-formatter" value="volume" />
   </modal>
 
 </vertical>

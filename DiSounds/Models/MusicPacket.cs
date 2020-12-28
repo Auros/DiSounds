@@ -12,7 +12,7 @@ namespace DiSounds.Models
         [Inject]
         protected readonly Config _config = null!;
 
-        [Inject]
+        [InjectOptional]
         private readonly DisoPreviewPlayer _disoPreviewPlayer = null!;
 
         public MusicPacket(FileInfo file, bool enabled) : base(file.Name, file.FullName)
@@ -28,10 +28,13 @@ namespace DiSounds.Models
 
         public override async Task Preview()
         {
-            AssociatedClip = await _cachedMediaAsyncLoader.LoadAudioClipAsync(Source, _cancellationTokenSource.Token);
-            if (AssociatedClip == _disoPreviewPlayer.DefaultClip)
+            if (_disoPreviewPlayer != null)
             {
-                return;
+                AssociatedClip = await _cachedMediaAsyncLoader.LoadAudioClipAsync(Source, _cancellationTokenSource.Token);
+                if (AssociatedClip == _disoPreviewPlayer.DefaultClip)
+                {
+                    return;
+                }
             }
             await base.Preview();
         }

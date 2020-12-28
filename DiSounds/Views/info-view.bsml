@@ -30,9 +30,8 @@
     <image src="DiSounds.Resources.pixel.png" />
 
     <horizontal>
-      <button interactable="false" text="FAQ" pref-height="12" event-click="show-yn" />
-      <button interactable="false" text="Tutorial" pref-height="12" />
-      <button interactable="false" text="Reset" pref-height="12" />
+      <button text="FAQ" on-click="faq" pref-width="20" pref-height="12" />
+      <button text="Reset" on-click="reset" pref-width="20" pref-height="12" />
     </horizontal>
 
   </vertical>
@@ -45,8 +44,8 @@
     <text text="Extras" align="TopLeft" font-size="4" italics="true" />
     <image src="DiSounds.Resources.pixel.png" />
     <horizontal>
-      <button text="GitHub" interactable="false" pref-width="20" />
-      <button text="Donate" interactable="false" pref-width="20" />
+      <button on-click="github" text="GitHub" pref-width="20" />
+      <button on-click="donate" text="Donate" pref-width="20" />
     </horizontal>
   </vertical>
 
@@ -64,4 +63,17 @@
     <button on-click="clicked-intro" text="Intro" pref-height="10" />
 
   </horizontal>
+
+  <modal size-delta-x="80" size-delta-y="60" show-event="show-yn" hide-event="hide-yn" clickerino-offerino-closerino="true">
+    <vertical pref-width="75" pref-height="55" pad="2">
+      <horizontal pref-height="45">
+        <text align="~alignment" word-wrapping="true" text="~yn-text" />
+      </horizontal>
+      <horizontal pref-height="15">
+        <button text="Cancel" pref-width="25" event-click="hide-yn" />
+        <button text="OK" on-click="did-ok" pref-width="25" />
+      </horizontal>
+    </vertical>
+  </modal>
+  
 </bg>
