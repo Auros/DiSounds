@@ -12,15 +12,30 @@ namespace DiSounds.UI
     [HotReload(RelativePathToLayout = @"..\Views\audio-view.bsml")]
     internal class DisoAudioView : BSMLAutomaticViewController
     {
+        public bool Built { get; private set; }
+
         [Inject]
         private readonly DiContainer _container = null!;
 
         [UIComponent("audio-list")]
         protected CustomCellListTableData audioTable = null!;
 
+        private string _forVal = "for <color=red>undefined</color>";
+        [UIValue("for-val")]
+        public string For
+        {
+            get => _forVal;
+            set
+            {
+                _forVal = $"for {value}";
+                NotifyPropertyChanged(nameof(For));
+            }
+        }
+
         protected override void DidActivate(bool firstActivation, bool addedToHierarchy, bool screenSystemEnabling)
         {
             base.DidActivate(firstActivation, addedToHierarchy, screenSystemEnabling);
+            Built = true;
         }
 
         public void Present(IEnumerable<DisoAudioPacket> disoAudioPacket)

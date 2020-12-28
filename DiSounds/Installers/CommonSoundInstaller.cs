@@ -9,6 +9,7 @@ namespace DiSounds.Installers
     {
         public override void InstallBindings()
         {
+            var config = Container.Resolve<Config>();
             Container.Bind<IRegistrar<AudioClip>>().WithId(nameof(DiClickManager)).To<DiClickManager>().AsSingle();
         }
     }

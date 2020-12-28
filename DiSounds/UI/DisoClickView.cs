@@ -1,9 +1,5 @@
 ﻿using Zenject;
-using UnityEngine;
-using DiSounds.Models;
-using System.Collections.Generic;
 using BeatSaberMarkupLanguage.Attributes;
-using BeatSaberMarkupLanguage.Components;
 using BeatSaberMarkupLanguage.ViewControllers;
 
 namespace DiSounds.UI

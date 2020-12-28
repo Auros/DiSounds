@@ -34,6 +34,9 @@ namespace DiSounds.UI
         private float _songLength = 0f;
         private float _currentSongTime = 0f;
 
+        private Sprite? _blurred;
+        private Sprite? _original;
+
         protected float CurrentSongTime
         {
             get => _currentSongTime;
@@ -74,13 +77,22 @@ namespace DiSounds.UI
             Enabled = false;
         }
 
-        public void SetPlayer(string name, float clipLength, Texture texture, bool playing = true)
+        public void SetPlayer(string name, float clipLength, Texture2D texture, bool playing = true)
         {
             CoverHint = name;
             _songLength = clipLength;
-            var blurTex = _kawaseBlurRenderer.Blur(texture, KawaseBlurRendererSO.KernelSize.Kernel7, 2);
-            coverArt.sprite = Sprite.Create(blurTex, new Rect(0f, 0f, blurTex.width, blurTex.height), new Vector2(0.5f, 0.5f), 1024 >> 2, 0U, SpriteMeshType.FullRect, Vector4.zero, false);
-            playPauseImage.sprite = playing ? _pauseSprite : _playSprite;
+            if (texture != null && coverArt != null)
+            {
+                _original = Sprite.Create(texture, new Rect(0f, 0f, texture.width, texture.height), new Vector2(0.5f, 0.5f), 1024 >> 2, 0U, SpriteMeshType.FullRect, Vector4.zero, false);
+                var blurTex = _kawaseBlurRenderer.Blur(texture, KawaseBlurRendererSO.KernelSize.Kernel35, 2);
+                _blurred = Sprite.Create(blurTex, new Rect(0f, 0f, blurTex.width, blurTex.height), new Vector2(0.5f, 0.5f), 1024 >> 2, 0U, SpriteMeshType.FullRect, Vector4.zero, false);
+
+                coverArt.sprite = playing ? _original : _blurred;
+            }
+            if (playPauseImage != null)
+            {
+                playPauseImage.sprite = playing ? _pauseSprite : _playSprite;
+            }
         }
 
         public void SetTime(float time)
@@ -116,11 +128,13 @@ namespace DiSounds.UI
             if (playPauseImage.sprite == _playSprite)
             {
                 playPauseImage.sprite = _pauseSprite;
+                coverArt.sprite = _original;
                 Resumed?.Invoke();
             }
             else
             {
                 playPauseImage.sprite = _playSprite;
+                coverArt.sprite = _blurred;
                 Paused?.Invoke();
             }
         }

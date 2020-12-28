@@ -28,6 +28,13 @@ namespace DiSounds.UI
 
         #endregion
 
+        #region Info Window
+
+        [UIValue("version")]
+        protected string Version => $"Mod Version: {_config.Version}";
+
+        #endregion
+
         #region Navigation BSML
 
         [UIAction("clicked-player")]
@@ -41,20 +48,13 @@ namespace DiSounds.UI
 
         #endregion
 
-        #region Info Window
-
-        [UIValue("version")]
-        protected string Version => $"Mod Version: {_config.Version}";
-
-        #endregion
-
         #region Dashboard Window
 
         [UIValue("music-player")]
         protected bool MusicPlayerEnabled
         {
-            get => true;
-            set => _ = value;
+            get => _config.MusicPlayerEnabled;
+            set => _config.MusicPlayerEnabled = value;
         }
 
         [UIValue("menu-clicks")]

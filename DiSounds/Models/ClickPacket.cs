@@ -25,6 +25,7 @@ namespace DiSounds.Models
 
         public override async Task Preview()
         {
+            // <[ w h a t   t h e   f u c k ]>
             IToggleable? toggleable = _registrar as IToggleable;
             if (!(toggleable is null)) toggleable.Status = false;
             await SiraUtil.Utilities.PauseChamp;

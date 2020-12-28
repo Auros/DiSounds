@@ -39,23 +39,26 @@ namespace DiSounds
                 .Register<CommonSoundInstaller>()
                 .Pseudo((ctx, Container) =>
                 {
-                    log?.Debug("Upgrading to our DiPlayer");
-                    var binding = ctx.GetComponent<ZenjectBinding>();
-                    var original = (binding.Components.FirstOrDefault(x => x is SongPreviewPlayer) as SongPreviewPlayer)!;
-                    var fader = original.GetComponent<FadeOutSongPreviewPlayerOnSceneTransitionStart>();
-                    var newPlayer = original.Upgrade<SongPreviewPlayer, DisoPreviewPlayer>();
+                    if (config.MusicPlayerEnabled)
+                    {
+                        log?.Debug("Upgrading to our DiPlayer");
+                        var binding = ctx.GetComponent<ZenjectBinding>();
+                        var original = (binding.Components.FirstOrDefault(x => x is SongPreviewPlayer) as SongPreviewPlayer)!;
+                        var fader = original.GetComponent<FadeOutSongPreviewPlayerOnSceneTransitionStart>();
+                        var newPlayer = original.Upgrade<SongPreviewPlayer, DisoPreviewPlayer>();
 
-                    Container.QueueForInject(newPlayer);
-                    Container.Unbind<SongPreviewPlayer>();
-                    Container.Bind(typeof(SongPreviewPlayer), typeof(DisoPreviewPlayer)).To<DisoPreviewPlayer>().FromInstance(newPlayer).AsSingle();
-                    fader.SetField<FadeOutSongPreviewPlayerOnSceneTransitionStart, SongPreviewPlayer>("_songPreviewPlayer", newPlayer);
+                        Container.QueueForInject(newPlayer);
+                        Container.Unbind<SongPreviewPlayer>();
+                        Container.Bind(typeof(SongPreviewPlayer), typeof(DisoPreviewPlayer)).To<DisoPreviewPlayer>().FromInstance(newPlayer).AsSingle();
+                        fader.SetField<FadeOutSongPreviewPlayerOnSceneTransitionStart, SongPreviewPlayer>("_songPreviewPlayer", newPlayer);
+                    }
 
                     log?.Debug("Exposing UI Audio Manager");
-                    var am = ctx.GetRootGameObjects().ElementAt(0).GetComponentInChildren<BasicUIAudioManager>();
-                    Container.Bind<BasicUIAudioManager>().FromInstance(am).AsSingle();
+                    var audioManager = ctx.GetRootGameObjects().ElementAt(0).GetComponentInChildren<BasicUIAudioManager>();
+                    Container.Bind<BasicUIAudioManager>().FromInstance(audioManager).AsSingle();
 
                     var gameObject = new GameObject("Audio Sourcer");
-                    var mixer = am.GetField<AudioSource, BasicUIAudioManager>("_audioSource").outputAudioMixerGroup;
+                    var mixer = audioManager.GetField<AudioSource, BasicUIAudioManager>("_audioSource").outputAudioMixerGroup;
                     var clone = gameObject.AddComponent<AudioSource>();
                     clone.outputAudioMixerGroup = mixer;
                     Container.BindInstance(clone).WithId("audio.sourcer").AsSingle();
@@ -64,7 +67,6 @@ namespace DiSounds
                 {
                     var manager = Container.ResolveId<SiraUtil.Interfaces.IRegistrar<AudioClip>>(nameof(Managers.DiClickManager));
                 });
-
         }
 
         [OnEnable, OnDisable]

@@ -1,4 +1,5 @@
 ﻿using Zenject;
+using System.Linq;
 using UnityEngine;
 using SiraUtil.Tools;
 
@@ -52,9 +53,11 @@ namespace DiSounds.Components
             }
         }
 
+        public AudioClip DefaultClip => _defaultAudioClip;
+
         public float DefaultAudioLength => _defaultAudioClip.length;
 
-        public bool PlayingDefault => _audioSources != null && _activeChannel > _audioSources.Length && _defaultAudioClip == _audioSources[_activeChannel].clip;
+        public bool PlayingDefault => _audioSources != null && _audioSources.Length != 0 && _audioSources.ElementAtOrDefault(_activeChannel) != null && _audioSources[_activeChannel] != null && _defaultAudioClip == _audioSources[_activeChannel].clip;
 
         [Inject]
         public void Construct(SiraLog siraLog)
@@ -66,7 +69,10 @@ namespace DiSounds.Components
         public void SetDefault(AudioClip clip)
         {
             _defaultAudioClip = clip;
-            CrossfadeTo(clip, 0f, -1f, _ambientVolumeScale);
+            if (_active)
+            {
+                CrossfadeTo(clip, 0f, -1f, _ambientVolumeScale);
+            }
         }
 
         #region Overrides
@@ -90,7 +96,6 @@ namespace DiSounds.Components
                 startTime = _lastTrueAudioLength;
                 audioClip = _active ? _defaultAudioClip : null!;
             }
-            _siraLog?.Info("Crossfading...");
             base.CrossfadeTo(audioClip, startTime, duration, volumeScale);
         }
 
