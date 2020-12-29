@@ -2,12 +2,12 @@
 using Zenject;
 using System.IO;
 using System.Linq;
+using UnityEngine;
 using IPA.Utilities;
 using SiraUtil.Tools;
 using DiSounds.Models;
 using BeatSaberMarkupLanguage;
 using System.Collections.Generic;
-using UnityEngine;
 
 namespace DiSounds.UI
 {
@@ -59,11 +59,19 @@ namespace DiSounds.UI
             _disoInfoView.ActionClicked += NavigationActionRequested;
             _highwayTutorialSystem.BlossomHappened += Instruction;
             await SiraUtil.Utilities.PauseChamp;
+            if (_config.FirstTime)
+            {
+                await SiraUtil.Utilities.AwaitSleep(1000);
+                _config.FirstTime = false;
+                _disoInfoView.Tutorial();
+            }
             _config.Updated += ConfigUpdated;
+
         }
 
         private void Instruction(HighwayTutorialSystem.Blossom instruction)
         {
+            // oversight
             if (instruction.Text.Contains("music player"))
             {
                 ShowTutorialAudioMenu();
@@ -234,7 +242,8 @@ namespace DiSounds.UI
             Intro,
 
             Reset,
-            Tutorial
+            Tutorial,
+            NoTutorial
         }
     }
 }

@@ -1,5 +1,4 @@
-﻿using System;
-using Zenject;
+﻿using Zenject;
 using System.IO;
 
 namespace DiSounds.Models

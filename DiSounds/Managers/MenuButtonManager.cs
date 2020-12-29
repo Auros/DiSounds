@@ -20,6 +20,7 @@ namespace DiSounds.Managers
         }
 
         public void Initialize() => MenuButtons.instance.RegisterButton(_menuButton);
+
         public void Dispose()
         {
             if (MenuButtons.IsSingletonAvailable && BSMLParser.IsSingletonAvailable)

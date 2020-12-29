@@ -47,6 +47,8 @@ namespace DiSounds.Managers
 
         public async void Initialize()
         {
+            if (!_config.MenuClicksEnabled) return;
+
             _siraLog.Debug("Loading audio clips.");
             var badClips = new List<FileInfo>();
             Stopwatch stopwatch = Stopwatch.StartNew();
@@ -132,7 +134,10 @@ namespace DiSounds.Managers
             }
             else
             {
-                Remove(_defaultClip);
+                if (_config.EnabledMenuClicks.Count !=  0)
+                {
+                    Remove(_defaultClip);
+                }
             }
         }
 

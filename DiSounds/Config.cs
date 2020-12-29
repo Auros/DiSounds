@@ -17,7 +17,7 @@ namespace DiSounds
 
         [NonNullable, UseConverter(typeof(VersionConverter))]
         public Version Version { get; set; } = new Version("0.0.0");
-        
+        public virtual bool FirstTime { get; set; } = true;
 
         [NonNullable, UseConverter(typeof(ListConverter<FileInfo, FileInfoConverter>))]
         public virtual List<FileInfo> EnabledMusicFiles { get; set; } = new List<FileInfo>();

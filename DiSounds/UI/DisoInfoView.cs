@@ -50,7 +50,7 @@ namespace DiSounds.UI
         {
             SetModal("" +
                 "<b><u>How do I add new sounds?</u></b>\n" +
-                "- Add the files into UserData/Di/Sounds/ and place them into the respective folder\n" +
+                "- Add the files into Beat Saber/UserData/Di/Sounds/ and place them into the respective folder\n" +
                 "\n" +
                 "<b><u>What file types are supported?</u></b>\n" +
                 "- Only .ogg files are supported for all audio files.\n"
@@ -59,9 +59,9 @@ namespace DiSounds.UI
         }
 
         [UIAction("tutorial")]
-        protected void Tutorial()
+        public void Tutorial()
         {
-            SetModal("Are you sure you want to start the tutorial?", delegate ()
+            SetModal("Would you like to start the tutorial?", delegate ()
             {
                 ActionClicked?.Invoke(DisoFlowCoordinator.Action.Tutorial);
                 parserParams.EmitEvent("hide-yn");
@@ -74,8 +74,7 @@ namespace DiSounds.UI
         {
             SetModal("Are you sure you want to reset your config?", delegate ()
             {
-                var version = _config.Version;
-                var config = new Config { Version = version };
+                var config = new Config { Version = _config.Version, FirstTime = _config.FirstTime };
                 _config.CopyFrom(config);
                 parserParams.EmitEvent("hide-yn");
                 fadeInOutController.FadeOut(0.5f, delegate ()

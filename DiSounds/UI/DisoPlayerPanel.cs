@@ -37,6 +37,8 @@ namespace DiSounds.UI
         private Sprite? _blurred;
         private Sprite? _original;
 
+        private Sprite _default = null!;
+
         protected float CurrentSongTime
         {
             get => _currentSongTime;
@@ -53,6 +55,7 @@ namespace DiSounds.UI
         protected void Construct(PhysicsRaycasterWithCache raycaster, GameplaySetupViewController gameplaySetupViewController, LevelPackDetailViewController levelPackDetailViewController)
         {
             _playSprite = BeatSaberMarkupLanguage.Utilities.FindSpriteInAssembly("DiSounds.Resources.play.png");
+            _default = BeatSaberMarkupLanguage.Utilities.FindSpriteInAssembly("DiSounds.Resources.question.png");
             _pauseSprite = BeatSaberMarkupLanguage.Utilities.FindSpriteInAssembly("DiSounds.Resources.pause.png");
             _kawaseBlurRenderer = levelPackDetailViewController.GetField<KawaseBlurRendererSO, LevelPackDetailViewController>("_kawaseBlurRenderer");
             _floatingScreen = FloatingScreen.CreateFloatingScreen(new Vector2(100f, 15f), false, Vector3.zero, Quaternion.identity);
@@ -77,17 +80,24 @@ namespace DiSounds.UI
             Enabled = false;
         }
 
-        public void SetPlayer(string name, float clipLength, Texture2D texture, bool playing = true)
+        public void SetPlayer(string name, float clipLength, Texture2D? texture, bool playing = true)
         {
             CoverHint = name;
             _songLength = clipLength;
             if (texture != null && coverArt != null)
             {
-                _original = Sprite.Create(texture, new Rect(0f, 0f, texture.width, texture.height), new Vector2(0.5f, 0.5f), 1024 >> 2, 0U, SpriteMeshType.FullRect, Vector4.zero, false);
                 var blurTex = _kawaseBlurRenderer.Blur(texture, KawaseBlurRendererSO.KernelSize.Kernel35, 2);
+                _original = Sprite.Create(texture, new Rect(0f, 0f, texture.width, texture.height), new Vector2(0.5f, 0.5f), 1024 >> 2, 0U, SpriteMeshType.FullRect, Vector4.zero, false);
                 _blurred = Sprite.Create(blurTex, new Rect(0f, 0f, blurTex.width, blurTex.height), new Vector2(0.5f, 0.5f), 1024 >> 2, 0U, SpriteMeshType.FullRect, Vector4.zero, false);
-
                 coverArt.sprite = playing ? _original : _blurred;
+            }
+            else
+            {
+                _original = _blurred = _default;
+                if (coverArt != null)
+                {
+                    coverArt.sprite = _original;
+                }
             }
             if (playPauseImage != null)
             {
