@@ -41,7 +41,7 @@ namespace DiSounds.Models
 
         public override void Deactivated()
         {
-            _config.EnabledMenuClicks.Remove(File);
+            _config.EnabledMusicFiles.Remove(File);
         }
     }
 }

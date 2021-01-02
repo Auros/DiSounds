@@ -14,5 +14,19 @@ namespace DiSounds.Models
             this.clip = clip;
             this.texture = texture;
         }
+
+        public override bool Equals(object obj)
+        {
+            if (obj is AudioContainer container)
+            {
+                return container.name == name;
+            }
+            return base.Equals(obj);
+        }
+
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
+        }
     }
 }

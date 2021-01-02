@@ -5,6 +5,7 @@ using UnityEngine;
 using VRUIControls;
 using IPA.Utilities;
 using BeatSaberMarkupLanguage.Attributes;
+using BeatSaberMarkupLanguage.Components;
 using BeatSaberMarkupLanguage.FloatingScreen;
 using BeatSaberMarkupLanguage.ViewControllers;
 using BeatSaberMarkupLanguage.Components.Settings;
@@ -18,6 +19,8 @@ namespace DiSounds.UI
         private FloatingScreen _floatingScreen = null!;
         private KawaseBlurRendererSO _kawaseBlurRenderer = null!;
         internal static readonly FieldAccessor<ImageView, float>.Accessor ImageSkew = FieldAccessor<ImageView, float>.GetAccessor("_skew");
+        internal static readonly FieldAccessor<ClickableImage, bool>.Accessor Highlight = FieldAccessor<ClickableImage, bool>.GetAccessor("_isHighlighted");
+        private static readonly FieldAccessor<ModalView, bool>.Accessor AnimateTheFuckingCanvasHolyShitWhatTheFuckHyperbolicMagnetismUserInterfaceLibrary = FieldAccessor<ModalView, bool>.GetAccessor("_animateParentCanvas");
 
         public bool Enabled { get; private set; }
         public bool Initialized => coverArt != null;
@@ -28,14 +31,13 @@ namespace DiSounds.UI
         public event Action? MovePrevious;
         public event Action<float>? VolumeChanged;
 
+        private Sprite? _blurred;
+        private Sprite? _original;
         private Sprite _playSprite = null!;
         private Sprite _pauseSprite = null!;
 
         private float _songLength = 0f;
         private float _currentSongTime = 0f;
-
-        private Sprite? _blurred;
-        private Sprite? _original;
 
         private Sprite _default = null!;
 
@@ -52,7 +54,7 @@ namespace DiSounds.UI
         }
 
         [Inject]
-        protected void Construct(PhysicsRaycasterWithCache raycaster, GameplaySetupViewController gameplaySetupViewController, LevelPackDetailViewController levelPackDetailViewController)
+        protected async void Construct(PhysicsRaycasterWithCache raycaster, GameplaySetupViewController gameplaySetupViewController, LevelPackDetailViewController levelPackDetailViewController)
         {
             _playSprite = BeatSaberMarkupLanguage.Utilities.FindSpriteInAssembly("DiSounds.Resources.play.png");
             _default = BeatSaberMarkupLanguage.Utilities.FindSpriteInAssembly("DiSounds.Resources.question.png");
@@ -60,6 +62,7 @@ namespace DiSounds.UI
             _kawaseBlurRenderer = levelPackDetailViewController.GetField<KawaseBlurRendererSO, LevelPackDetailViewController>("_kawaseBlurRenderer");
             _floatingScreen = FloatingScreen.CreateFloatingScreen(new Vector2(100f, 15f), false, Vector3.zero, Quaternion.identity);
             _floatingScreen.GetComponent<VRGraphicRaycaster>().SetField("_physicsRaycaster", raycaster);
+            await SiraUtil.Utilities.AwaitSleep(500); // wait for bsml
             _floatingScreen.transform.SetParent(gameplaySetupViewController.transform, false);
             _floatingScreen.transform.localPosition = new Vector3(3f, 50f);
             _floatingScreen.transform.localScale = Vector3.one;
@@ -86,6 +89,7 @@ namespace DiSounds.UI
             _songLength = clipLength;
             if (texture != null && coverArt != null)
             {
+                texture.wrapMode = TextureWrapMode.Clamp;
                 var blurTex = _kawaseBlurRenderer.Blur(texture, KawaseBlurRendererSO.KernelSize.Kernel35, 2);
                 _original = Sprite.Create(texture, new Rect(0f, 0f, texture.width, texture.height), new Vector2(0.5f, 0.5f), 1024 >> 2, 0U, SpriteMeshType.FullRect, Vector4.zero, false);
                 _blurred = Sprite.Create(blurTex, new Rect(0f, 0f, blurTex.width, blurTex.height), new Vector2(0.5f, 0.5f), 1024 >> 2, 0U, SpriteMeshType.FullRect, Vector4.zero, false);
@@ -112,8 +116,21 @@ namespace DiSounds.UI
 
         #region Events
 
-        [UIAction("next-click")] protected void Next() => MoveNext?.Invoke();
-        [UIAction("prev-click")] protected void Prev() => MovePrevious?.Invoke();
+        [UIAction("next-click")]
+        protected void Next()
+        {
+            Highlight(ref nextImage) = true;
+            nextImage.InvokeMethod<object, ClickableImage>("UpdateHighlight");
+            MoveNext?.Invoke();
+        }
+
+        [UIAction("prev-click")]
+        protected void Prev()
+        {
+            Highlight(ref prevImage) = true;
+            prevImage.InvokeMethod<object, ClickableImage>("UpdateHighlight");
+            MovePrevious?.Invoke();
+        }
 
         [UIAction("#post-parse")]
         protected void Parsed()
@@ -130,6 +147,7 @@ namespace DiSounds.UI
             value.fontStyle = TMPro.FontStyles.Normal;
             ImageSkew(ref handle) = 0f;
             ImageSkew(ref bg) = 0f;
+
         }
 
         [UIAction("play-pause-click")]
@@ -161,6 +179,20 @@ namespace DiSounds.UI
             return val.ToString("P2");
         }
 
+        protected void OnEnable()
+        {
+            canvasGroup.alpha = 1;
+        }
+
+        protected void OnDisable()
+        {
+            if (volumeModalRoot != null)
+            {
+                volumeModalRoot.gameObject.SetActive(false);
+                AnimateTheFuckingCanvasHolyShitWhatTheFuckHyperbolicMagnetismUserInterfaceLibrary(ref volumeModalRoot) = true;
+            }
+        }
+
         #endregion
 
         #region Bindings
@@ -190,7 +222,7 @@ namespace DiSounds.UI
         }
 
         [UIValue("scrub-pos")]
-        protected int Scrub => _songLength == 0 ? -30 : (int)Mathf.Lerp(-30f, 30f, _currentSongTime / _songLength);
+        protected float Scrub => _songLength == 0 ? -30 : Mathf.Lerp(-30f, 30f, _currentSongTime / _songLength);
 
         [UIValue("time-text")]
         protected string TimeText => $"{string.Format("{0}:{1:00}", (int)(CurrentSongTime / 60), CurrentSongTime % 60)} / {string.Format("{0}:{1:00}", (int)(_songLength / 60), _songLength % 60)}";
@@ -198,6 +230,9 @@ namespace DiSounds.UI
         #endregion
 
         #region Components
+
+        [UIComponent("volume-modal-root")]
+        protected ModalView volumeModalRoot = null!;
 
         [UIComponent("cover-art")]
         protected ImageView coverArt = null!;
@@ -207,6 +242,12 @@ namespace DiSounds.UI
 
         [UIComponent("play-pause")]
         protected ImageView playPauseImage = null!;
+
+        [UIComponent("prev-image")]
+        protected ClickableImage prevImage = null!;
+
+        [UIComponent("next-image")]
+        protected ClickableImage nextImage = null!;
         
         [UIComponent("passive-bar")]
         protected ImageView passiveBar = null!;

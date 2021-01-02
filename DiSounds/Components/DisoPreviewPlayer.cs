@@ -44,20 +44,22 @@ namespace DiSounds.Components
         {
             get
             {
+                if (_audioSources == null) return 0;
+                if (_audioSources.ElementAtOrDefault(_activeChannel) == null) return 0;
                 var audioSource = _audioSources[_activeChannel];
-                if (!audioSource.isPlaying)
-                {
-                    return 0f;
-                }
                 return audioSource.time;
             }
         }
+
+        public float AmbientVolume => _ambientVolumeScale;
 
         public AudioClip DefaultClip => _defaultAudioClip;
 
         public float DefaultAudioLength => _defaultAudioClip.length;
 
-        public bool PlayingDefault => _audioSources != null && _audioSources.Length != 0 && _audioSources.ElementAtOrDefault(_activeChannel) != null && _audioSources[_activeChannel] != null && _defaultAudioClip == _audioSources[_activeChannel].clip;
+        public bool PlayingDefault => Initialized && _audioSources[_activeChannel].isPlaying && _defaultAudioClip == _audioSources[_activeChannel].clip;
+
+        public bool Initialized => _audioSources != null && _audioSources.Length != 0 && _audioSources.ElementAtOrDefault(_activeChannel) != null && _audioSources[_activeChannel] != null;
 
         [Inject]
         public void Construct(SiraLog siraLog)
@@ -69,6 +71,7 @@ namespace DiSounds.Components
         public void SetDefault(AudioClip clip)
         {
             _defaultAudioClip = clip;
+            _lastTrueAudioLength = 0;
             if (_active)
             {
                 CrossfadeTo(clip, 0f, -1f, _ambientVolumeScale);
@@ -77,6 +80,23 @@ namespace DiSounds.Components
 
         #region Overrides
 
+        public override void OnEnable()
+        {
+            _fadeSpeed = _defaultCrossfadeSpeed;
+            _audioSources = new AudioSource[_channelsCount];
+            for (int i = 0; i < this._channelsCount; i++)
+            {
+                _audioSources[i] = Instantiate(_audioSourcePrefab, transform);
+                _audioSources[i].volume = 0f;
+                _audioSources[i].loop = false;
+                _audioSources[i].reverbZoneMix = 0f;
+                _audioSources[i].playOnAwake = false;
+            }
+            if (Active)
+            {
+                CrossfadeTo(_defaultAudioClip, _lastTrueAudioLength, -1, _ambientVolumeScale);
+            }
+        }
         public override void CrossfadeToDefault()
         {
             if (!_active)
@@ -91,7 +111,6 @@ namespace DiSounds.Components
 
         public override void CrossfadeTo(AudioClip audioClip, float startTime, float duration, float volumeScale = 1)
         {
-            if (audioClip != _defaultAudioClip && _audioSources[_activeChannel].clip == _defaultAudioClip) _lastTrueAudioLength = CurrentAudioTime;
             if (_transitionDidEnd)
             {
                 _transitionDidEnd = false;
@@ -111,6 +130,10 @@ namespace DiSounds.Components
                     _transitionDidEnd = true;
                     CrossfadeTo(_defaultAudioClip, 0f, -1f, _ambientVolumeScale);
                 }
+            }
+            if (Active && PlayingDefault)
+            {
+                _lastTrueAudioLength = CurrentAudioTime;
             }
             base.Update();
         }

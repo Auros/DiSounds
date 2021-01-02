@@ -5,7 +5,7 @@
   </vertical>
   <vertical pad="2" pref-width="70" pref-height="55">
     <vertical pref-width="70" bg="round-rect-panel" bg-color="fuchsia" pad="2">
-      <bool-setting text="Enable Default Menu Click Noise" apply-on-change="true" value="default-click" />
+      <bool-setting text="Add Default Menu Click Noise" apply-on-change="true" value="default-click" />
     </vertical>
     <vertical pref-width="70" bg="round-rect-panel" bg-color="fuchsia" pad="2">
       <bool-setting text="Enable Random Pitch" apply-on-change="true" value="random-pitch" />

@@ -13,6 +13,7 @@ namespace DiSounds.Managers
         public Action? Loaded { get; set; }
 
         private bool _didInit;
+        private readonly Random _random = new Random();
         private readonly BeatmapLevelsModel _beatmapLevelsModel;
         private readonly CancellationTokenSource _cancellationTokenSource;
         private RandomObjectPicker<IPreviewBeatmapLevel>? _randomObjectPicker;
@@ -49,7 +50,12 @@ namespace DiSounds.Managers
 
         public async Task<AudioContainer> GetRandomContainer()
         {
+            UnityEngine.Random.InitState(_random.Next(0, 100000));
             var randomBeatmap = _randomObjectPicker!.PickRandomObject();
+            if (randomBeatmap == null)
+            {
+                return new AudioContainer("^", null!, null!);
+            }
             if (!_containerCache.TryGetValue(randomBeatmap, out AudioContainer container))
             {
                 var audioClip = await randomBeatmap.GetPreviewAudioClipAsync(_cancellationTokenSource.Token);

@@ -23,29 +23,27 @@ namespace DiSounds.Managers
         private readonly Config _config;
         private readonly SiraLog _siraLog;
         private readonly DisoPlayerPanel _disoPlayerPanel;
+        private readonly Stack<AudioContainer> _playFuture;
         private readonly Stack<AudioContainer> _playHistory;
         private readonly DisoPreviewPlayer _disoPreviewPlayer;
         private readonly IAudioContainerService _audioContainerService;
         private readonly GameplaySetupViewController _gameplaySetupViewController;
-        private readonly StandardLevelDetailViewController _standardLevelDetailViewController;
         private const string _content = "<clickable-text id=\"root\" on-click=\"toggle\" text=\"💿\" align=\"Center\" anchor-pos-x=\"40\" anchor-pos-y=\"0.25\" size-delta-x=\"8\" default-color=\"#ffd630\" />";
 
         private Texture2D? _activeTexture;
         private string _activeName = "Unknown";
+        private AudioContainer? _currentContainer;
 
-        public DisoMusicPlayer(Config config, SiraLog siraLog, DisoPlayerPanel disoPlayerPanel, DisoPreviewPlayer disoPreviewPlayer, IAudioContainerService audioContainerService,
-                               GameplaySetupViewController gameplaySetupViewController, StandardLevelDetailViewController standardLevelDetailViewController)
+        public DisoMusicPlayer(Config config, SiraLog siraLog, DisoPlayerPanel disoPlayerPanel, DisoPreviewPlayer disoPreviewPlayer, IAudioContainerService audioContainerService, GameplaySetupViewController gameplaySetupViewController)
         {
             _config = config;
             _siraLog = siraLog;
             _disoPlayerPanel = disoPlayerPanel;
             _disoPreviewPlayer = disoPreviewPlayer;
+            _playFuture = new Stack<AudioContainer>();
             _playHistory = new Stack<AudioContainer>();
             _audioContainerService = audioContainerService;
             _gameplaySetupViewController = gameplaySetupViewController;
-            _standardLevelDetailViewController = standardLevelDetailViewController;
-            BSMLParser.instance.Parse(_content, _gameplaySetupViewController.transform.Find("HeaderPanel").gameObject, this);
-            root.name = "DisoPlayerToggle";
         }
 
         #region Kernel State
@@ -59,13 +57,14 @@ namespace DiSounds.Managers
             _disoPlayerPanel.MovePrevious += MovePrevious;
             _disoPlayerPanel.VolumeChanged += VolumeChanged;
             SceneManager.activeSceneChanged += SceneChanged;
-            _standardLevelDetailViewController.didPressActionButtonEvent += DidPressActionButton;
 
             _disoPlayerPanel.Volume = _disoPreviewPlayer.Volume;
         }
 
         private void LoadedAudio()
         {
+            BSMLParser.instance.Parse(_content, _gameplaySetupViewController.transform.Find("HeaderPanel").gameObject, this);
+            root.name = "DisoPlayerToggle";
             _initialized = true;
             MoveNext();
         }
@@ -98,7 +97,6 @@ namespace DiSounds.Managers
             _disoPlayerPanel.MovePrevious -= MovePrevious;
             _disoPlayerPanel.VolumeChanged -= VolumeChanged;
             SceneManager.activeSceneChanged -= SceneChanged;
-            _standardLevelDetailViewController.didPressActionButtonEvent -= DidPressActionButton;
         }
 
         #endregion
@@ -121,12 +119,33 @@ namespace DiSounds.Managers
         {
             if (_config.MusicPlayerEnabled && _initialized)
             {
-                var container = await _audioContainerService.GetRandomContainer();
+                if (_currentContainer != null)
+                {
+
+                    _playHistory.Push(_currentContainer.Value);
+                }
+                AudioContainer container;
+                if (_playFuture.Count > 0)
+                {
+                    container = _playFuture.Pop();
+                }
+                else
+                {
+                    container = await _audioContainerService.GetRandomContainer();
+                }
+                if (container.name == "^")
+                {
+                    return;
+                }
                 _activeName = container.name;
+                _currentContainer = container;
                 _activeTexture = container.texture;
                 _disoPreviewPlayer.SetDefault(container.clip);
                 _disoPlayerPanel.SetPlayer(_activeName, _disoPreviewPlayer.DefaultAudioLength, _activeTexture, !_paused);
-                _playHistory.Push(container);
+                if (_paused)
+                {
+                    _disoPlayerPanel.SetTime(0f);
+                }
             }
         }
 
@@ -134,9 +153,20 @@ namespace DiSounds.Managers
         {
             if (_config.MusicPlayerEnabled)
             {
+                if (_disoPreviewPlayer.CurrentAudioTime > 1f)
+                {
+                    _disoPreviewPlayer.CrossfadeTo(_disoPreviewPlayer.DefaultClip, 0f, _disoPreviewPlayer.DefaultClip.length, _disoPreviewPlayer.AmbientVolume);
+                    _disoPlayerPanel.SetTime(0f);
+                    return;
+                }
                 if (_playHistory.Count > 0)
                 {
+                    if (_currentContainer != null)
+                    {
+                        _playFuture.Push(_currentContainer.Value);
+                    }
                     var record = _playHistory.Pop();
+                    _currentContainer = record;
                     _activeName = record.name;
                     _activeTexture = record.texture;
                     _disoPreviewPlayer.SetDefault(record.clip);
@@ -145,6 +175,10 @@ namespace DiSounds.Managers
                 else
                 {
                     MoveNext();
+                }
+                if (_paused)
+                {
+                    _disoPlayerPanel.SetTime(0f);
                 }
             }
         }
@@ -156,20 +190,15 @@ namespace DiSounds.Managers
 
         private async void SceneChanged(Scene oldScene, Scene newScene)
         {
-            if (newScene.name == "MenuCore" && !_disoPreviewPlayer.Active)
+            await SiraUtil.Utilities.PauseChamp;
+            if (newScene.name == "MenuCore")
             {
-                await SiraUtil.Utilities.AwaitSleep(500);
                 if (!_config.SaveTime)
                 {
                     MoveNext();
                 }
                 _disoPreviewPlayer.Active = !_paused;
             }
-        }
-
-        private void DidPressActionButton(StandardLevelDetailViewController _)
-        {
-            _disoPreviewPlayer.Active = false;
         }
 
         #endregion

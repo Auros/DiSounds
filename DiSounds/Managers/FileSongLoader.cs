@@ -19,6 +19,7 @@ namespace DiSounds.Managers
 
         private readonly Config _config;
         private readonly SiraLog _siraLog;
+        private readonly System.Random _random = new System.Random();
         private RandomObjectPicker<AudioContainer>? _randomObjectPicker;
         private readonly CachedMediaAsyncLoader _cachedMediaAsyncLoader;
         private readonly CancellationTokenSource _cancellationTokenSource;
@@ -82,6 +83,7 @@ namespace DiSounds.Managers
         public async Task<AudioContainer> GetRandomContainer()
         {
             await Task.CompletedTask;
+            UnityEngine.Random.InitState(_random.Next(0, 100000));
             return _randomObjectPicker!.PickRandomObject();
         }
 
