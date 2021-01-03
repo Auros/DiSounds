@@ -1,0 +1,22 @@
+﻿<vertical xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="https://monkeymanboy.github.io/BSML-Docs/ https://raw.githubusercontent.com/monkeymanboy/BSML-Docs/gh-pages/BSMLSchema.xsd">
+
+  <horizontal>
+    <clickable-image id="prev-image" src="DiSounds.Resources.prev.png" on-click="prev-click" preserve-aspect="true" pref-width="10" pref-height="10" />
+    <clickable-image src="DiSounds.Resources.volume.png" event-click="show-vol" preserve-aspect="true" pref-width="10" pref-height="10" />
+    <image id="cover-art" hover-hint="~cover-hint" preserve-aspect="true" pref-width="10" pref-height="10" />
+    <clickable-image id="play-pause" on-click="play-pause-click" preserve-aspect="true" pref-width="10" pref-height="10" />
+    <clickable-image id="next-image" src="DiSounds.Resources.next.png" on-click="next-click" preserve-aspect="true" pref-width="10" pref-height="10" />
+  </horizontal>
+
+  <horizontal pref-width="60" pref-height="0.75">
+    <image id="passive-bar" hover-hint="~time-text" src="DiSounds.Resources.pixel.png" />
+  </horizontal>
+  <horizontal pref-width="1.5" pref-height="1.5" ignore-layout="true" anchor-pos-y="-6.02" anchor-pos-x="~scrub-pos">
+    <image id="active-bar" hover-hint="~time-text" src="DiSounds.Resources.pixel.png" preserve-aspect="true" />
+  </horizontal>
+
+  <modal id="volume-modal-root" size-delta-x="40" size-delta-y="7" show-event="show-vol" hide-event="hide-vol" clickerino-offerino-closerino="true">
+    <slider-setting id="slider" min="0" max="1" increment="0.05" anchor-pos-y="0" apply-on-change="true" on-change="volume-update" formatter="percent-formatter" value="volume" />
+  </modal>
+
+</vertical>

@@ -1,0 +1,18 @@
+﻿<vertical horizontal-fit="PreferredSize" vertical-fit="PreferredSize" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="https://monkeymanboy.github.io/BSML-Docs/ https://raw.githubusercontent.com/monkeymanboy/BSML-Docs/gh-pages/BSMLSchema.xsd">
+  <vertical bg="round-rect-panel" pref-width="92" pref-height="15" pad="1">
+    <text text="Settings" align="Center" font-size="7" />
+    <text text="for Menu Clicks" align="Center" font-size="4" font-color="grey" />
+  </vertical>
+  <vertical pad="2" pref-width="70" pref-height="55">
+    <vertical pref-width="70" bg="round-rect-panel" bg-color="fuchsia" pad="2">
+      <bool-setting text="Add Default Menu Click Noise" apply-on-change="true" value="default-click" />
+    </vertical>
+    <vertical pref-width="70" bg="round-rect-panel" bg-color="fuchsia" pad="2">
+      <bool-setting text="Enable Random Pitch" apply-on-change="true" value="random-pitch" />
+      <vertical active="~show-pitches" pref-width="60" pref-height="0" bg="round-rect-panel" bg-color="purple" pad="1">
+        <slider-setting text="Minimum" min="0" max="2" increment="0.05" formatter="percent-formatter" apply-on-change="true" value="min-pitch" />
+        <slider-setting text="Maximum" min="0" max="2" increment="0.05" formatter="percent-formatter" apply-on-change="true" value="max-pitch" />
+      </vertical>
+    </vertical>
+  </vertical>
+</vertical>

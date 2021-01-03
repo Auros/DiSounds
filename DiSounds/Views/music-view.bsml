@@ -1,0 +1,10 @@
+﻿<vertical horizontal-fit="PreferredSize" vertical-fit="PreferredSize" spacing="3" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="https://monkeymanboy.github.io/BSML-Docs/ https://raw.githubusercontent.com/monkeymanboy/BSML-Docs/gh-pages/BSMLSchema.xsd">
+  <vertical bg="round-rect-panel" pref-width="92" pref-height="15" pad="1">
+    <text text="Settings" align="Center" font-size="7" />
+    <text text="for Music Player" align="Center" font-size="4" font-color="grey" />
+  </vertical>
+  <vertical pad="2" pref-width="70" bg="round-rect-panel" bg-color="cyan">
+    <bool-setting text="Save Music Time" value="save-time" apply-on-change="true" hover-hint="When you return to the menu after playing a song, your music player will continue from where it ended when you started the map." />
+    <dropdown-list-setting text="Music Source" options="playback-types" value="playback-mode" apply-on-change="true" formatter="format" hover-hint="The source of the music to use for the music player." />
+  </vertical>
+</vertical>

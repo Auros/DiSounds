@@ -1,0 +1,29 @@
+﻿<vertical horizontal-fit="PreferredSize" vertical-fit="PreferredSize" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="https://monkeymanboy.github.io/BSML-Docs/ https://raw.githubusercontent.com/monkeymanboy/BSML-Docs/gh-pages/BSMLSchema.xsd">
+  <vertical bg="round-rect-panel" pref-width="92" pref-height="15" pad="1">
+    <text text="Audio Manager" align="Center" font-size="7" />
+    <text text="~for-val" align="Center" font-size="4" font-color="grey" />
+  </vertical>
+
+  <horizontal pref-width="90" horizontal-fit="PreferredSize" spacing="2">
+    <custom-list id="audio-list" visible-cells="6" anchor-pos-x="0" cell-size="10" list-width="90">
+      <horizontal child-align="MiddleLeft" pref-width="90" pref-height="10">
+        <horizontal pref-width="12" horizontal-fit="PreferredSize" size-delta-x="16" spacing="2" pad="2">
+          <text text="~status" font-color="~status-color" align="Left" font-size="5" overflow-mode="Truncate" />
+          <image pref-width="0.5" src="DiSounds.Resources.pixel.png" />
+        </horizontal>
+        <horizontal pref-width="53" pref-height="10">
+          <text text="~name" overflow-mode="Ellipsis" align="Left" font-size="5" />
+        </horizontal>
+        <horizontal pref-width="20" spacing="1">
+          <button text="~toggle-string" font-size="4" pref-width="8" hover-hint="~source" on-click="change-state" />
+          <button-with-icon icon="DiSounds.Resources.play.png" pref-width="9" pref-height="8" on-click="preview"  />
+        </horizontal>
+      </horizontal>
+    </custom-list>
+    <vertical vertical-fit="Unconstrained" pref-width="12" spacing="20">
+      <page-button dir="Up" event-click="audio-list#PageUp" />
+      <page-button dir="Down" event-click="audio-list#PageDown" />
+    </vertical>
+  </horizontal>
+  
+</vertical>
