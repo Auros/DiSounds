@@ -15,4 +15,5 @@ This mod is incompatible with BeatSaberPlus and NalulunaMenu
 - All modes are disabled by default
 - Files for each mode are stored in UserData/Di/Sounds/MODE
 - MODE can be **Clicks**, **Intro**, or **Music**. They only support .ogg files
+- If the folder doesn't exist, you can create it yourself. They are only created when you access its settings in the UI.
 - Note: Images in the Music folder that match the name of a song will load as the cover art.
