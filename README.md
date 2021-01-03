@@ -1,6 +1,8 @@
 # DiSounds
  Customize your sounds in Beat Saber.
 
+ You can customize the menu click sound, menu music (built in music player), AND an intro sound to welcome you to your game.
+
 
 This mod is incompatible with BeatSaberPlus and NalulunaMenu
 
