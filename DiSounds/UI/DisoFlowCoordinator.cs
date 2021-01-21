@@ -30,6 +30,7 @@ namespace DiSounds.UI
         private static readonly DirectoryInfo _introDir = new DirectoryInfo(Path.Combine(UnityGame.UserDataPath, "Di", "Sounds", "Intro"));
         private static readonly DirectoryInfo _outroDir = new DirectoryInfo(Path.Combine(UnityGame.UserDataPath, "Di", "Sounds", "Outro"));
         private static readonly DirectoryInfo _clicksDir = new DirectoryInfo(Path.Combine(UnityGame.UserDataPath, "Di", "Sounds", "Clicks"));
+        private static readonly DirectoryInfo _resultsDir = new DirectoryInfo(Path.Combine(UnityGame.UserDataPath, "Di", "Sounds", "Results"));
 
         [Inject]
         protected void Construct(Config config, SiraLog siraLog, DisoInfoView disoInfoView, DisoAudioView disoAudioView, MainFlowCoordinator mainFlowCoordinator,
@@ -117,9 +118,19 @@ namespace DiSounds.UI
                 ShowOutroSoundsMenu();
                 return;
             }
-            if (action == Action.OutroFC)
+            if (action == Action.Results)
             {
-                ShowOutroFCSoundsMenu();
+                ShowResultsSoundsMenu();
+                return;
+            }
+            if (action == Action.ResultsFC)
+            {
+                ShowResultsFCSoundsMenu();
+                return;
+            }
+            if (action == Action.ResultsFailed)
+            {
+                ShowResultsFailedSoundsMenu();
                 return;
             }
             if (action == Action.Tutorial)
@@ -258,25 +269,69 @@ namespace DiSounds.UI
             _disoAudioView.Present(packets);
         }
 
-        private void ShowOutroFCSoundsMenu()
+        private void ShowResultsSoundsMenu()
         {
-            List<OutroPacket> packets = new List<OutroPacket>();
-            foreach (var proj in _config.EnabledOutroFCSounds)
+            List<ResultPacket> packets = new List<ResultPacket>();
+            foreach (var proj in _config.EnabledResultSounds)
             {
-                packets.Add(new OutroPacket(proj, true));
+                packets.Add(new ResultPacket(proj, true));
             }
-            if (!_outroDir.Exists) _outroDir.Create();
-            foreach (var file in _outroDir.EnumerateFiles())
+            if (!_resultsDir.Exists) _resultsDir.Create();
+            foreach (var file in _resultsDir.EnumerateFiles())
             {
                 if (!packets.Any(p => p.File.FullName == file.FullName))
                 {
                     if (file.Extension == ".ogg")
-                        packets.Add(new OutroPacket(file, false));
+                        packets.Add(new ResultPacket(file, false));
                 }
             }
             SetLeftScreenViewController(_disoAudioView, ViewController.AnimationType.In);
             SetRightScreenViewController(null, ViewController.AnimationType.Out);
-            _disoAudioView.For = "Outro (Full Combo)";
+            _disoAudioView.For = "Results";
+            _disoAudioView.Present(packets);
+        }
+
+        private void ShowResultsFCSoundsMenu()
+        {
+            List<ResultFCPacket> packets = new List<ResultFCPacket>();
+            foreach (var proj in _config.EnabledResultFCSounds)
+            {
+                packets.Add(new ResultFCPacket(proj, true));
+            }
+            if (!_resultsDir.Exists) _resultsDir.Create();
+            foreach (var file in _resultsDir.EnumerateFiles())
+            {
+                if (!packets.Any(p => p.File.FullName == file.FullName))
+                {
+                    if (file.Extension == ".ogg")
+                        packets.Add(new ResultFCPacket(file, false));
+                }
+            }
+            SetLeftScreenViewController(_disoAudioView, ViewController.AnimationType.In);
+            SetRightScreenViewController(null, ViewController.AnimationType.Out);
+            _disoAudioView.For = "Results (Full Combo)";
+            _disoAudioView.Present(packets);
+        }
+
+        private void ShowResultsFailedSoundsMenu()
+        {
+            List<ResultFailedPacket> packets = new List<ResultFailedPacket>();
+            foreach (var proj in _config.EnabledResultFailedSounds)
+            {
+                packets.Add(new ResultFailedPacket(proj, true));
+            }
+            if (!_resultsDir.Exists) _resultsDir.Create();
+            foreach (var file in _resultsDir.EnumerateFiles())
+            {
+                if (!packets.Any(p => p.File.FullName == file.FullName))
+                {
+                    if (file.Extension == ".ogg")
+                        packets.Add(new ResultFailedPacket(file, false));
+                }
+            }
+            SetLeftScreenViewController(_disoAudioView, ViewController.AnimationType.In);
+            SetRightScreenViewController(null, ViewController.AnimationType.Out);
+            _disoAudioView.For = "Results (Failed)";
             _disoAudioView.Present(packets);
         }
 
@@ -297,7 +352,9 @@ namespace DiSounds.UI
             MenuClicks,
             Intro,
             Outro,
-            OutroFC,
+            Results,
+            ResultsFC,
+            ResultsFailed,
 
             Reset,
             Tutorial,

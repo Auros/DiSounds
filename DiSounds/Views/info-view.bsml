@@ -11,14 +11,17 @@
   </vertical>
 
   <vertical id="dashboard-window" bg="round-rect-panel" bg-color="#00665c"
-            size-delta-x="50" size-delta-y="38" pref-width="50" pref-height="38"
-            anchor-pos-x="27.5" anchor-pos-y="20.2"
+            size-delta-x="50" size-delta-y="48" pref-width="50" pref-height="48"
+            anchor-pos-x="27.5" anchor-pos-y="15"
             pad="2" spacing="0.5">
-    <text text="Dashboard" align="Left" font-size="7" italics="true" />
+    <text text="Dashboard" align="Left" font-size="5" italics="true" />
     <image src="DiSounds.Resources.pixel.png" />
     <bool-setting text="Music Player" value="music-player" apply-on-change="true" bind-value="true" />
     <bool-setting text="Menu Clicks" value="menu-clicks" apply-on-change="true" bind-value="true" />
     <bool-setting text="Intro" value="intro" apply-on-change="true" />
+    <bool-setting text="Outro" value="outro" apply-on-change="true" />
+    <bool-setting text="Results" value="results" apply-on-change="true" />
+    <bool-setting text="Results (Failed)" value="results-failed" apply-on-change="true" />
   </vertical>
 
   <vertical id="help-window" bg="round-rect-panel" bg-color="#003566"
@@ -38,12 +41,12 @@
   </vertical>
 
   <vertical id="extras-window" bg="round-rect-panel"
-            size-delta-x="50" size-delta-y="18" pref-width="50" pref-height="18"
-            anchor-pos-x="27.5" anchor-pos-y="-13"
+            size-delta-x="50" size-delta-y="10" pref-width="50" pref-height="10"
+            anchor-pos-x="27.5" anchor-pos-y="-17.15"
             pad="2" spacing="0.5">
 
-    <text text="Extras" align="TopLeft" font-size="4" italics="true" />
-    <image src="DiSounds.Resources.pixel.png" />
+    <!--<text text="Extras" align="TopLeft" font-size="4" italics="true" />
+    <image src="DiSounds.Resources.pixel.png" />-->
     <horizontal>
       <button on-click="github" text="GitHub" pref-width="20" />
       <button on-click="donate" text="Donate" pref-width="20" />

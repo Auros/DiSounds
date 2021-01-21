@@ -131,7 +131,9 @@ namespace DiSounds.UI
             DisoFlowCoordinator.Action.MenuClicks,
             DisoFlowCoordinator.Action.Intro,
             DisoFlowCoordinator.Action.Outro,
-            DisoFlowCoordinator.Action.OutroFC
+            DisoFlowCoordinator.Action.Results,
+            DisoFlowCoordinator.Action.ResultsFC,
+            DisoFlowCoordinator.Action.ResultsFailed,
         };
 
         [UIAction("format-menu-options")]
@@ -144,7 +146,9 @@ namespace DiSounds.UI
                 DisoFlowCoordinator.Action.MenuClicks => "Menu Clicks",
                 DisoFlowCoordinator.Action.Intro => "Intro",
                 DisoFlowCoordinator.Action.Outro => "Outro",
-                DisoFlowCoordinator.Action.OutroFC => "Outro (FC)",
+                DisoFlowCoordinator.Action.Results => "Results",
+                DisoFlowCoordinator.Action.ResultsFC => "Results (FC)",
+                DisoFlowCoordinator.Action.ResultsFailed => "Results (Failed)",
                 _ => "UNKNOWN"
             };
         }
@@ -172,6 +176,27 @@ namespace DiSounds.UI
         {
             get => _config.IntroSoundsEnabled;
             set => _config.IntroSoundsEnabled = value;
+        }
+
+        [UIValue("outro")]
+        protected bool Outro
+        {
+            get => _config.OutroSoundsEnabled;
+            set => _config.OutroSoundsEnabled = value;
+        }
+
+        [UIValue("results")]
+        protected bool Results
+        {
+            get => _config.ResultSoundsEnabled;
+            set => _config.ResultSoundsEnabled = value;
+        }
+
+        [UIValue("results-failed")]
+        protected bool ResultsFailed
+        {
+            get => _config.ResultFailedSoundsEnabled;
+            set => _config.ResultFailedSoundsEnabled = value;
         }
 
         #endregion

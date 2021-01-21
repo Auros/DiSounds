@@ -30,7 +30,6 @@ namespace DiSounds.Managers
 
         public async void Initialize()
         {
-
             if (_config.EnabledIntroSounds.Count > 0 && !_didPlay)
             {
                 _didPlay = true;

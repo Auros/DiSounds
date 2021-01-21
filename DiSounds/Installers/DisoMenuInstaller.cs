@@ -19,6 +19,8 @@ namespace DiSounds.Installers
             Container.Bind<DisoFlowCoordinator>().FromNewComponentOnNewGameObject(nameof(DisoFlowCoordinator)).AsSingle();
 
             var config = Container.Resolve<Config>();
+            Container.Bind<ResultsSoundManager>().AsSingle();
+            Container.BindInterfacesTo<OutroSoundManager>().AsSingle();
             config.EnabledMusicFiles = config.EnabledMusicFiles.Where(f => f.FullName != null).GroupBy(f => f.FullName).Select(g => g.FirstOrDefault()).ToList();
             config.EnabledMenuClicks = config.EnabledMenuClicks.Where(f => f.FullName != null).GroupBy(f => f.FullName).Select(g => g.FirstOrDefault()).ToList();
             config.EnabledIntroSounds = config.EnabledIntroSounds.Where(f => f.FullName != null).GroupBy(f => f.FullName).Select(g => g.FirstOrDefault()).ToList();

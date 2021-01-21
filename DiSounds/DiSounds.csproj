@@ -53,8 +53,16 @@
     </ItemGroup>
 
     <ItemGroup>
+        <Reference Include="0Harmony">
+          <HintPath>..\..\..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Beat Saber\Libs\0Harmony.dll</HintPath>
+          <Private>False</Private>
+        </Reference>
         <Reference Include="BSML">
           <HintPath>$(BeatSaberDir)\Plugins\BSML.dll</HintPath>
+          <Private>False</Private>
+        </Reference>
+        <Reference Include="GameplayCore">
+          <HintPath>..\..\..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Beat Saber\Beat Saber_Data\Managed\GameplayCore.dll</HintPath>
           <Private>False</Private>
         </Reference>
         <Reference Include="HMRendering">

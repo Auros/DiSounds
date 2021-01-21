@@ -3,14 +3,14 @@ using System.IO;
 
 namespace DiSounds.Models
 {
-    internal class OutroFCPacket : DisoAudioPacket
+    internal class ResultFailedPacket : DisoAudioPacket
     {
         public FileInfo File { get; }
 
         [Inject]
         protected readonly Config _config = null!;
 
-        public OutroFCPacket(FileInfo file, bool enabled) : base(file.Name, file.FullName)
+        public ResultFailedPacket(FileInfo file, bool enabled) : base(file.Name, file.FullName)
         {
             File = file;
             _enabled = enabled;
@@ -18,12 +18,12 @@ namespace DiSounds.Models
 
         public override void Activated()
         {
-            _config.EnabledOutroFCSounds.Add(File);
+            _config.EnabledResultFailedSounds.Add(File);
         }
 
         public override void Deactivated()
         {
-            _config.EnabledOutroFCSounds.Remove(File);
+            _config.EnabledResultFailedSounds.Remove(File);
         }
     }
 }
