@@ -59,9 +59,7 @@
     <vertical pref-width="0.4">
       <image src="DiSounds.Resources.pixel.png" />
     </vertical>
-    <button on-click="clicked-player" text="Music Player" pref-height="10" />
-    <button on-click="clicked-clicks" text="Menu Clicks" pref-height="10" />
-    <button on-click="clicked-intro" text="Intro" pref-height="10" />
+    <dropdown-list-setting pref-width="70" options="menu-options" apply-on-change="true" text=" " value="menu-value" bind-value="true" formatter="format-menu-options" />
 
   </horizontal>
 

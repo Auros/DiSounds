@@ -28,6 +28,7 @@ namespace DiSounds.UI
 
         private static readonly DirectoryInfo _musicDir = new DirectoryInfo(Path.Combine(UnityGame.UserDataPath, "Di", "Sounds", "Music"));
         private static readonly DirectoryInfo _introDir = new DirectoryInfo(Path.Combine(UnityGame.UserDataPath, "Di", "Sounds", "Intro"));
+        private static readonly DirectoryInfo _outroDir = new DirectoryInfo(Path.Combine(UnityGame.UserDataPath, "Di", "Sounds", "Outro"));
         private static readonly DirectoryInfo _clicksDir = new DirectoryInfo(Path.Combine(UnityGame.UserDataPath, "Di", "Sounds", "Clicks"));
 
         [Inject]
@@ -65,6 +66,7 @@ namespace DiSounds.UI
                 _config.FirstTime = false;
                 _disoInfoView.Tutorial();
             }
+            _disoInfoView.MenuValue = Action.None;
             _config.Updated += ConfigUpdated;
 
         }
@@ -108,6 +110,16 @@ namespace DiSounds.UI
             if (action == Action.Intro)
             {
                 ShowIntroSoundsMenu();
+                return;
+            }
+            if (action == Action.Outro)
+            {
+                ShowOutroSoundsMenu();
+                return;
+            }
+            if (action == Action.OutroFC)
+            {
+                ShowOutroFCSoundsMenu();
                 return;
             }
             if (action == Action.Tutorial)
@@ -224,6 +236,50 @@ namespace DiSounds.UI
             _disoAudioView.Present(packets);
         }
 
+        private void ShowOutroSoundsMenu()
+        {
+            List<OutroPacket> packets = new List<OutroPacket>();
+            foreach (var proj in _config.EnabledOutroSounds)
+            {
+                packets.Add(new OutroPacket(proj, true));
+            }
+            if (!_outroDir.Exists) _outroDir.Create();
+            foreach (var file in _outroDir.EnumerateFiles())
+            {
+                if (!packets.Any(p => p.File.FullName == file.FullName))
+                {
+                    if (file.Extension == ".ogg")
+                        packets.Add(new OutroPacket(file, false));
+                }
+            }
+            SetLeftScreenViewController(_disoAudioView, ViewController.AnimationType.In);
+            SetRightScreenViewController(null, ViewController.AnimationType.Out);
+            _disoAudioView.For = "Outro";
+            _disoAudioView.Present(packets);
+        }
+
+        private void ShowOutroFCSoundsMenu()
+        {
+            List<OutroPacket> packets = new List<OutroPacket>();
+            foreach (var proj in _config.EnabledOutroFCSounds)
+            {
+                packets.Add(new OutroPacket(proj, true));
+            }
+            if (!_outroDir.Exists) _outroDir.Create();
+            foreach (var file in _outroDir.EnumerateFiles())
+            {
+                if (!packets.Any(p => p.File.FullName == file.FullName))
+                {
+                    if (file.Extension == ".ogg")
+                        packets.Add(new OutroPacket(file, false));
+                }
+            }
+            SetLeftScreenViewController(_disoAudioView, ViewController.AnimationType.In);
+            SetRightScreenViewController(null, ViewController.AnimationType.Out);
+            _disoAudioView.For = "Outro (Full Combo)";
+            _disoAudioView.Present(packets);
+        }
+
         protected override void BackButtonWasPressed(ViewController topViewController)
         {
             if (_configUpdated)
@@ -240,6 +296,8 @@ namespace DiSounds.UI
             MusicPlayer,
             MenuClicks,
             Intro,
+            Outro,
+            OutroFC,
 
             Reset,
             Tutorial,

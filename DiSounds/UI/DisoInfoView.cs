@@ -2,6 +2,7 @@
 using System;
 using Zenject;
 using UnityEngine;
+using System.Collections.Generic;
 using BeatSaberMarkupLanguage.Parser;
 using BeatSaberMarkupLanguage.Attributes;
 using BeatSaberMarkupLanguage.Components;
@@ -109,14 +110,44 @@ namespace DiSounds.UI
 
         #region Navigation BSML
 
-        [UIAction("clicked-player")]
-        protected void ClickedPlayer() => ActionClicked?.Invoke(DisoFlowCoordinator.Action.MusicPlayer);
+        private DisoFlowCoordinator.Action _menuValue;
+        [UIValue("menu-value")]
+        public DisoFlowCoordinator.Action MenuValue
+        {
+            get => _menuValue;
+            set
+            {
+                _menuValue = value;
+                NotifyPropertyChanged();
+                ActionClicked?.Invoke(_menuValue);
+            }
+        }
 
-        [UIAction("clicked-clicks")]
-        protected void ClickedClicks() => ActionClicked?.Invoke(DisoFlowCoordinator.Action.MenuClicks);
+        [UIValue("menu-options")]
+        protected List<object> menuOptions = new List<object>
+        {
+            DisoFlowCoordinator.Action.None,
+            DisoFlowCoordinator.Action.MusicPlayer,
+            DisoFlowCoordinator.Action.MenuClicks,
+            DisoFlowCoordinator.Action.Intro,
+            DisoFlowCoordinator.Action.Outro,
+            DisoFlowCoordinator.Action.OutroFC
+        };
 
-        [UIAction("clicked-intro")]
-        protected void ClickedIntro() => ActionClicked?.Invoke(DisoFlowCoordinator.Action.Intro);
+        [UIAction("format-menu-options")]
+        protected string FormatMenuOptions(DisoFlowCoordinator.Action action)
+        {
+            return action switch
+            {
+                DisoFlowCoordinator.Action.None => "Select Menu",
+                DisoFlowCoordinator.Action.MusicPlayer => "Music Player",
+                DisoFlowCoordinator.Action.MenuClicks => "Menu Clicks",
+                DisoFlowCoordinator.Action.Intro => "Intro",
+                DisoFlowCoordinator.Action.Outro => "Outro",
+                DisoFlowCoordinator.Action.OutroFC => "Outro (FC)",
+                _ => "UNKNOWN"
+            };
+        }
 
         #endregion
 
