@@ -2,6 +2,7 @@
 using Zenject;
 using SiraUtil;
 using IPA.Loader;
+using HarmonyLib;
 using System.Linq;
 using UnityEngine;
 using IPA.Utilities;
@@ -18,10 +19,14 @@ namespace DiSounds
     [Plugin(RuntimeOptions.DynamicInit), Slog]
     public class Plugin
     {
+        private readonly Harmony _harmony;
+        private const string _harmonyID = "dev.auros.disounds";
+
         [Init]
         public Plugin(Conf conf, IPALogger log, Zenjector zenjector, PluginMetadata metadata)
         {
             var config = conf.Generated<Config>();
+            _harmony = new Harmony(_harmonyID);
             config.Version = metadata.Version;
 
             zenjector
@@ -69,7 +74,16 @@ namespace DiSounds
                 });
         }
 
-        [OnEnable, OnDisable]
-        public void OnState() { /* On State */ }
+        [OnEnable]
+        public void OnEnable()
+        {
+            _harmony.PatchAll();
+        }
+
+        [OnDisable]
+        public void OnDisable()
+        {
+            _harmony.UnpatchAll(_harmonyID);
+        }
     }
 }

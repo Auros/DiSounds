@@ -1,11 +1,15 @@
-﻿using TMPro;
+﻿using HMUI;
+using TMPro;
 using System;
 using Zenject;
 using UnityEngine;
+using IPA.Utilities;
+using System.Collections.Generic;
 using BeatSaberMarkupLanguage.Parser;
 using BeatSaberMarkupLanguage.Attributes;
 using BeatSaberMarkupLanguage.Components;
 using BeatSaberMarkupLanguage.ViewControllers;
+using BeatSaberMarkupLanguage.Components.Settings;
 
 namespace DiSounds.UI
 {
@@ -14,6 +18,7 @@ namespace DiSounds.UI
     internal class DisoInfoView : BSMLAutomaticViewController
     {
         public event Action<DisoFlowCoordinator.Action>? ActionClicked;
+        private static readonly FieldAccessor<DropdownWithTableView, ModalView>.Accessor ModalView = FieldAccessor<DropdownWithTableView, ModalView>.GetAccessor("_modalView");
 
         [Inject]
         protected readonly Config _config = null!;
@@ -39,6 +44,7 @@ namespace DiSounds.UI
         protected void Parsed()
         {
             infoWindowBackground.background.material = BeatSaberMarkupLanguage.Utilities.ImageResources.NoGlowMat;
+            FixModalPos();
         }
 
         #endregion
@@ -109,14 +115,58 @@ namespace DiSounds.UI
 
         #region Navigation BSML
 
-        [UIAction("clicked-player")]
-        protected void ClickedPlayer() => ActionClicked?.Invoke(DisoFlowCoordinator.Action.MusicPlayer);
+        [UIComponent("menu-list")]
+        protected readonly DropDownListSetting menuListDropdown = null!;
 
-        [UIAction("clicked-clicks")]
-        protected void ClickedClicks() => ActionClicked?.Invoke(DisoFlowCoordinator.Action.MenuClicks);
+        private DisoFlowCoordinator.Action _menuValue;
+        [UIValue("menu-value")]
+        public DisoFlowCoordinator.Action MenuValue
+        {
+            get => _menuValue;
+            set
+            {
+                _menuValue = value;
+                NotifyPropertyChanged();
+                ActionClicked?.Invoke(_menuValue);
+            }
+        }
 
-        [UIAction("clicked-intro")]
-        protected void ClickedIntro() => ActionClicked?.Invoke(DisoFlowCoordinator.Action.Intro);
+        [UIValue("menu-options")]
+        protected List<object> menuOptions = new List<object>
+        {
+            DisoFlowCoordinator.Action.None,
+            DisoFlowCoordinator.Action.MusicPlayer,
+            DisoFlowCoordinator.Action.MenuClicks,
+            DisoFlowCoordinator.Action.Intro,
+            DisoFlowCoordinator.Action.Outro,
+            DisoFlowCoordinator.Action.Results,
+            DisoFlowCoordinator.Action.ResultsFC,
+            DisoFlowCoordinator.Action.ResultsFailed,
+        };
+
+        [UIAction("format-menu-options")]
+        protected string FormatMenuOptions(DisoFlowCoordinator.Action action)
+        {
+            return action switch
+            {
+                DisoFlowCoordinator.Action.None => "Select Menu",
+                DisoFlowCoordinator.Action.MusicPlayer => "Music Player",
+                DisoFlowCoordinator.Action.MenuClicks => "Menu Clicks",
+                DisoFlowCoordinator.Action.Intro => "Intro",
+                DisoFlowCoordinator.Action.Outro => "Outro",
+                DisoFlowCoordinator.Action.Results => "Results",
+                DisoFlowCoordinator.Action.ResultsFC => "Results (FC)",
+                DisoFlowCoordinator.Action.ResultsFailed => "Results (Failed)",
+                _ => "UNKNOWN"
+            };
+        }
+
+        private void FixModalPos()
+        {
+            var dropdown = menuListDropdown.dropdown as DropdownWithTableView;
+            var modal = ModalView(ref dropdown);
+            modal.transform.localPosition = new Vector3(modal.transform.localPosition.x, 14.1f, modal.transform.localPosition.z);
+        }
 
         #endregion
 
@@ -141,6 +191,27 @@ namespace DiSounds.UI
         {
             get => _config.IntroSoundsEnabled;
             set => _config.IntroSoundsEnabled = value;
+        }
+
+        [UIValue("outro")]
+        protected bool Outro
+        {
+            get => _config.OutroSoundsEnabled;
+            set => _config.OutroSoundsEnabled = value;
+        }
+
+        [UIValue("results")]
+        protected bool Results
+        {
+            get => _config.ResultSoundsEnabled;
+            set => _config.ResultSoundsEnabled = value;
+        }
+
+        [UIValue("results-failed")]
+        protected bool ResultsFailed
+        {
+            get => _config.ResultFailedSoundsEnabled;
+            set => _config.ResultFailedSoundsEnabled = value;
         }
 
         #endregion

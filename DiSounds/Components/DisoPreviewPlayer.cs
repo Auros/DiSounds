@@ -12,7 +12,7 @@ namespace DiSounds.Components
         private SiraLog _siraLog = null!;
         private float _lastTrueAudioLength = 0f;
         private AudioClip _realDefaultAudioClip = null!;
-
+        public DiContainer Container { get; set; } = null!;
         public bool Active
         {
             get => _active;
@@ -62,9 +62,10 @@ namespace DiSounds.Components
         public bool Initialized => _audioSources != null && _audioSources.Length != 0 && _audioSources.ElementAtOrDefault(_activeChannel) != null && _audioSources[_activeChannel] != null;
 
         [Inject]
-        public void Construct(SiraLog siraLog)
+        public void Construct(SiraLog siraLog, DiContainer container)
         {
             _siraLog = siraLog;
+            Container = container;
             _realDefaultAudioClip = _defaultAudioClip;
         }
 
@@ -117,6 +118,11 @@ namespace DiSounds.Components
                 startTime = _lastTrueAudioLength;
                 audioClip = _active ? _defaultAudioClip : null!;
             }
+            base.CrossfadeTo(audioClip, startTime, duration, volumeScale);
+        }
+
+        public void ForceCrossfadeTo(AudioClip audioClip, float startTime, float duration, float volumeScale = 1)
+        {
             base.CrossfadeTo(audioClip, startTime, duration, volumeScale);
         }
 

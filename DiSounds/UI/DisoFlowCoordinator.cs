@@ -28,7 +28,9 @@ namespace DiSounds.UI
 
         private static readonly DirectoryInfo _musicDir = new DirectoryInfo(Path.Combine(UnityGame.UserDataPath, "Di", "Sounds", "Music"));
         private static readonly DirectoryInfo _introDir = new DirectoryInfo(Path.Combine(UnityGame.UserDataPath, "Di", "Sounds", "Intro"));
+        private static readonly DirectoryInfo _outroDir = new DirectoryInfo(Path.Combine(UnityGame.UserDataPath, "Di", "Sounds", "Outro"));
         private static readonly DirectoryInfo _clicksDir = new DirectoryInfo(Path.Combine(UnityGame.UserDataPath, "Di", "Sounds", "Clicks"));
+        private static readonly DirectoryInfo _resultsDir = new DirectoryInfo(Path.Combine(UnityGame.UserDataPath, "Di", "Sounds", "Results"));
 
         [Inject]
         protected void Construct(Config config, SiraLog siraLog, DisoInfoView disoInfoView, DisoAudioView disoAudioView, MainFlowCoordinator mainFlowCoordinator,
@@ -46,6 +48,12 @@ namespace DiSounds.UI
 
             _disoClickView = disoClickView;
             _disoMusicView = disoMusicView;
+
+            _musicDir.Create();
+            _introDir.Create();
+            _outroDir.Create();
+            _clicksDir.Create();
+            _resultsDir.Create();
         }
 
         protected override async void DidActivate(bool firstActivation, bool addedToHierarchy, bool screenSystemEnabling)
@@ -65,6 +73,7 @@ namespace DiSounds.UI
                 _config.FirstTime = false;
                 _disoInfoView.Tutorial();
             }
+            _disoInfoView.MenuValue = Action.None;
             _config.Updated += ConfigUpdated;
 
         }
@@ -110,21 +119,41 @@ namespace DiSounds.UI
                 ShowIntroSoundsMenu();
                 return;
             }
+            if (action == Action.Outro)
+            {
+                ShowOutroSoundsMenu();
+                return;
+            }
+            if (action == Action.Results)
+            {
+                ShowResultsSoundsMenu();
+                return;
+            }
+            if (action == Action.ResultsFC)
+            {
+                ShowResultsFCSoundsMenu();
+                return;
+            }
+            if (action == Action.ResultsFailed)
+            {
+                ShowResultsFailedSoundsMenu();
+                return;
+            }
             if (action == Action.Tutorial)
             {
                 if (!_highwayTutorialSystem.Active)
                 {
-                    _highwayTutorialSystem.Add(new HighwayTutorialSystem.Blossom("Welcome To DiSounds! Hit the next arrow below to continue.", new Vector3(0f, 1.5f, 2f), Quaternion.identity));
-                    _highwayTutorialSystem.Add(new HighwayTutorialSystem.Blossom("This is the dashboard. Use it to enable/disable different modes.", new Vector3(1.4f, 1.9f, 2.2f), EulY(30), true));
-                    _highwayTutorialSystem.Add(new HighwayTutorialSystem.Blossom("This is the settings window. Use it to navigate to different settings.", new Vector3(1.4f, 0.55f, 2.2f), EulY(30), true));
-                    _highwayTutorialSystem.Add(new HighwayTutorialSystem.Blossom("This is the music player. It shows all the loaded clips for the active mode.", new Vector3(-2f, 2.45f, 1.1f), EulY(300)));
-                    _highwayTutorialSystem.Add(new HighwayTutorialSystem.Blossom("This is the enabled status of a clip.", new Vector3(-2.3f, 1.6f, 0.875f), EulY(300), true));
-                    _highwayTutorialSystem.Add(new HighwayTutorialSystem.Blossom("This is the file name of a clip.", new Vector3(-2f, 1.60f, 1.5f), EulY(300), true));
-                    _highwayTutorialSystem.Add(new HighwayTutorialSystem.Blossom("This is the action button. Use it to enable/disable a clip.", new Vector3(-1.75f, 1.6f, 1.92f), EulY(310), true));
-                    _highwayTutorialSystem.Add(new HighwayTutorialSystem.Blossom("This is the preview button. Use it to preview a clip.", new Vector3(-1.7f, 1.6f, 2.1f), EulY(310), true));
-                    _highwayTutorialSystem.Add(new HighwayTutorialSystem.Blossom("Over here, any mode specific settings will appear.", new Vector3(2f, 2.45f, 1.1f), EulY(60)));
-                    _highwayTutorialSystem.Add(new HighwayTutorialSystem.Blossom("You can learn where to add new audio clips here.", new Vector3(-0.4f, 0.95f, 2.5f), Quaternion.identity, true));
-                    _highwayTutorialSystem.Add(new HighwayTutorialSystem.Blossom("If you want to start clean, reset everything here.", new Vector3(0.3f, 0.95f, 2.5f), Quaternion.identity, true));
+                    _highwayTutorialSystem.Add(new HighwayTutorialSystem.Blossom("Welcome To DiSounds! Hit the next arrow below to continue.", new Vector3(0f, 1.5f, 2.5f), Quaternion.identity));
+                    _highwayTutorialSystem.Add(new HighwayTutorialSystem.Blossom("This is the dashboard. Use it to enable/disable different modes.", new Vector3(1.8f, 1.9f, 3.2f), EulY(30), true));
+                    _highwayTutorialSystem.Add(new HighwayTutorialSystem.Blossom("This is the settings window. Use it to navigate to different settings.", new Vector3(1.8f, 0.3f, 3.2f), EulY(30), true));
+                    _highwayTutorialSystem.Add(new HighwayTutorialSystem.Blossom("This is the music player. It shows all the loaded clips for the active mode.", new Vector3(-3f, 2.8f, 1.65f), EulY(300)));
+                    _highwayTutorialSystem.Add(new HighwayTutorialSystem.Blossom("This is the enabled status of a clip.", new Vector3(-3.3f, 1.69f, 1.07f), EulY(300), true));
+                    _highwayTutorialSystem.Add(new HighwayTutorialSystem.Blossom("This is the file name of a clip.", new Vector3(-3f, 1.69f, 1.7f), EulY(300), true));
+                    _highwayTutorialSystem.Add(new HighwayTutorialSystem.Blossom("This is the action button. Use it to enable/disable a clip.", new Vector3(-2.75f, 1.69f, 2.69f), EulY(310), true));
+                    _highwayTutorialSystem.Add(new HighwayTutorialSystem.Blossom("This is the preview button. Use it to preview a clip.", new Vector3(-2.7f, 1.69f, 3.05f), EulY(320), true));
+                    _highwayTutorialSystem.Add(new HighwayTutorialSystem.Blossom("Over here, any mode specific settings will appear.", new Vector3(3f, 2.8f, 1.65f), EulY(60)));
+                    _highwayTutorialSystem.Add(new HighwayTutorialSystem.Blossom("You can learn where to add new audio clips here.", new Vector3(-0.7f, 0.75f, 3.5f), Quaternion.identity, true));
+                    _highwayTutorialSystem.Add(new HighwayTutorialSystem.Blossom("If you want to start clean, reset everything here.", new Vector3(0.26f, 0.75f, 3.5f), Quaternion.identity, true));
                     _highwayTutorialSystem.Add(new HighwayTutorialSystem.Blossom("That's all! Enjoy the mod!", new Vector3(0f, 1.5f, 2f), Quaternion.identity));
                     _highwayTutorialSystem.Enable();
                 }
@@ -224,6 +253,94 @@ namespace DiSounds.UI
             _disoAudioView.Present(packets);
         }
 
+        private void ShowOutroSoundsMenu()
+        {
+            List<OutroPacket> packets = new List<OutroPacket>();
+            foreach (var proj in _config.EnabledOutroSounds)
+            {
+                packets.Add(new OutroPacket(proj, true));
+            }
+            if (!_outroDir.Exists) _outroDir.Create();
+            foreach (var file in _outroDir.EnumerateFiles())
+            {
+                if (!packets.Any(p => p.File.FullName == file.FullName))
+                {
+                    if (file.Extension == ".ogg")
+                        packets.Add(new OutroPacket(file, false));
+                }
+            }
+            SetLeftScreenViewController(_disoAudioView, ViewController.AnimationType.In);
+            SetRightScreenViewController(null, ViewController.AnimationType.Out);
+            _disoAudioView.For = "Outro";
+            _disoAudioView.Present(packets);
+        }
+
+        private void ShowResultsSoundsMenu()
+        {
+            List<ResultPacket> packets = new List<ResultPacket>();
+            foreach (var proj in _config.EnabledResultSounds)
+            {
+                packets.Add(new ResultPacket(proj, true));
+            }
+            if (!_resultsDir.Exists) _resultsDir.Create();
+            foreach (var file in _resultsDir.EnumerateFiles())
+            {
+                if (!packets.Any(p => p.File.FullName == file.FullName))
+                {
+                    if (file.Extension == ".ogg")
+                        packets.Add(new ResultPacket(file, false));
+                }
+            }
+            SetLeftScreenViewController(_disoAudioView, ViewController.AnimationType.In);
+            SetRightScreenViewController(null, ViewController.AnimationType.Out);
+            _disoAudioView.For = "Results";
+            _disoAudioView.Present(packets);
+        }
+
+        private void ShowResultsFCSoundsMenu()
+        {
+            List<ResultFCPacket> packets = new List<ResultFCPacket>();
+            foreach (var proj in _config.EnabledResultFCSounds)
+            {
+                packets.Add(new ResultFCPacket(proj, true));
+            }
+            if (!_resultsDir.Exists) _resultsDir.Create();
+            foreach (var file in _resultsDir.EnumerateFiles())
+            {
+                if (!packets.Any(p => p.File.FullName == file.FullName))
+                {
+                    if (file.Extension == ".ogg")
+                        packets.Add(new ResultFCPacket(file, false));
+                }
+            }
+            SetLeftScreenViewController(_disoAudioView, ViewController.AnimationType.In);
+            SetRightScreenViewController(null, ViewController.AnimationType.Out);
+            _disoAudioView.For = "Results (Full Combo)";
+            _disoAudioView.Present(packets);
+        }
+
+        private void ShowResultsFailedSoundsMenu()
+        {
+            List<ResultFailedPacket> packets = new List<ResultFailedPacket>();
+            foreach (var proj in _config.EnabledResultFailedSounds)
+            {
+                packets.Add(new ResultFailedPacket(proj, true));
+            }
+            if (!_resultsDir.Exists) _resultsDir.Create();
+            foreach (var file in _resultsDir.EnumerateFiles())
+            {
+                if (!packets.Any(p => p.File.FullName == file.FullName))
+                {
+                    if (file.Extension == ".ogg")
+                        packets.Add(new ResultFailedPacket(file, false));
+                }
+            }
+            SetLeftScreenViewController(_disoAudioView, ViewController.AnimationType.In);
+            SetRightScreenViewController(null, ViewController.AnimationType.Out);
+            _disoAudioView.For = "Results (Failed)";
+            _disoAudioView.Present(packets);
+        }
+
         protected override void BackButtonWasPressed(ViewController topViewController)
         {
             if (_configUpdated)
@@ -240,6 +357,10 @@ namespace DiSounds.UI
             MusicPlayer,
             MenuClicks,
             Intro,
+            Outro,
+            Results,
+            ResultsFC,
+            ResultsFailed,
 
             Reset,
             Tutorial,

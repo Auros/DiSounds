@@ -40,6 +40,26 @@ namespace DiSounds
         public virtual List<FileInfo> EnabledIntroSounds { get; set; } = new List<FileInfo>();
         public virtual bool IntroSoundsEnabled { get; set; } = false;
 
+
+        [NonNullable, UseConverter(typeof(ListConverter<FileInfo, FileInfoConverter>))]
+        public virtual List<FileInfo> EnabledOutroSounds { get; set; } = new List<FileInfo>();
+        public virtual bool OutroSoundsEnabled { get; set; } = false;
+
+
+        [NonNullable, UseConverter(typeof(ListConverter<FileInfo, FileInfoConverter>))]
+        public virtual List<FileInfo> EnabledResultSounds { get; set; } = new List<FileInfo>();
+
+        [NonNullable, UseConverter(typeof(ListConverter<FileInfo, FileInfoConverter>))]
+        public virtual List<FileInfo> EnabledResultFCSounds { get; set; } = new List<FileInfo>();
+
+        public virtual bool ResultSoundsEnabled { get; set; } = false;
+
+
+
+        [NonNullable, UseConverter(typeof(ListConverter<FileInfo, FileInfoConverter>))]
+        public virtual List<FileInfo> EnabledResultFailedSounds { get; set; } = new List<FileInfo>();
+        public virtual bool ResultFailedSoundsEnabled { get; set; } = false;
+
         public enum PlaybackType
         {
             CustomSongs,
