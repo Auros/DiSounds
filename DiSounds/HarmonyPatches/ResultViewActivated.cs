@@ -29,6 +29,14 @@ namespace DiSounds.HarmonyPatches
         public static FieldAccessor<FireworksController, FireworkItemController.Pool>.Accessor FireworkControllerPool = FieldAccessor<FireworksController, FireworkItemController.Pool>.GetAccessor("_fireworkItemPool");
         public static FieldAccessor<MemoryPoolBase<FireworkItemController>, DiContainer>.Accessor MemoryPoolBaseDiContainer = FieldAccessor<MemoryPoolBase<FireworkItemController>, DiContainer>.GetAccessor("_container");
 
+        internal static void Postfix(SongPreviewPlayer ____songPreviewPlayer, FireworksController ____fireworksController, LevelCompletionResults ____levelCompletionResults)
+        {
+            if (____levelCompletionResults.levelEndStateType == LevelCompletionResults.LevelEndStateType.Failed)
+            {
+                CrossfadeOverride(____songPreviewPlayer, ____fireworksController, ____levelCompletionResults, false, null!, 0f, 1f, 1f);
+            } 
+        }
+
         internal static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
         {
             List<CodeInstruction> codes = instructions.ToList();
@@ -90,7 +98,7 @@ namespace DiSounds.HarmonyPatches
             }
             else
             {
-                if (wasHighScore)
+                if (wasHighScore && audioClip != null)
                     player.CrossfadeTo(audioClip, startTime, duration, volume);
             }
         }

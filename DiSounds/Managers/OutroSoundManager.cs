@@ -3,11 +3,11 @@ using System;
 using Zenject;
 using System.Linq;
 using UnityEngine;
-using UnityEngine.UI;
 using IPA.Utilities;
 using SiraUtil.Tools;
-using UnityEngine.Events;
+using UnityEngine.UI;
 using System.Threading;
+using UnityEngine.Events;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 
@@ -41,12 +41,6 @@ namespace DiSounds.Managers
         public void Initialize()
         {
             _mainMenuViewController.didActivateEvent += MainMenu_Activated;
-            _mainMenuViewController.didFinishEvent += DidFinish;
-        }
-
-        private void DidFinish(MainMenuViewController _, MainMenuViewController.MenuButton btn)
-        {
-            _siraLog.Error(btn.ToString());
         }
 
         private void MainMenu_Activated(bool firstActivation, bool _, bool __)
@@ -114,7 +108,6 @@ namespace DiSounds.Managers
         public void Dispose()
         {
             _mainMenuViewController.didActivateEvent -= MainMenu_Activated;
-            _mainMenuViewController.didFinishEvent -= DidFinish;
         }
     }
 }

@@ -2,6 +2,7 @@
 using SiraUtil.Tools;
 using System.Threading;
 using System.Threading.Tasks;
+using DiSounds.Components;
 
 namespace DiSounds.Managers
 {
@@ -24,6 +25,7 @@ namespace DiSounds.Managers
 
         public async Task PlayRandomAudio(UnityEngine.AudioClip fallback, LevelCompletionResults results, bool highScore)
         {
+            await SiraUtil.Utilities.AwaitSleep(250);
             if (results.levelEndStateType == LevelCompletionResults.LevelEndStateType.Failed && _config.ResultFailedSoundsEnabled)
             {
                 var hasAudio = _config.EnabledResultFailedSounds.Count != 0;
@@ -34,7 +36,7 @@ namespace DiSounds.Managers
                 var randomAudioFile = _config.EnabledResultFailedSounds[_random.Next(0, _config.EnabledResultFailedSounds.Count)];
                 _siraLog.Info($"Loading Audio File: {randomAudioFile.FullName}");
                 var clip = await _audioClipAsyncLoader.LoadAudioClipAsync(randomAudioFile.FullName, CancellationToken.None);
-                _songPreviewPlayer.CrossfadeTo(clip, 0f, clip.length, 1f);
+                Play(clip);
             }
             else if (results.levelEndStateType == LevelCompletionResults.LevelEndStateType.Cleared && _config.ResultSoundsEnabled) 
             {
@@ -53,8 +55,18 @@ namespace DiSounds.Managers
                 var clip = await _audioClipAsyncLoader.LoadAudioClipAsync(randomAudioFile.FullName, CancellationToken.None);
                 
                 if (highScore)
-                    _songPreviewPlayer.CrossfadeTo(clip, 0f, clip.length, 1f);
+                {
+                    Play(clip);
+                }
             }
+        }
+
+        private void Play(UnityEngine.AudioClip clip)
+        {
+            if (_songPreviewPlayer is DisoPreviewPlayer diso)
+                diso.ForceCrossfadeTo(clip, 0f, clip.length + 0.5f, 1f);
+            else
+                _songPreviewPlayer.CrossfadeTo(clip, 0f, clip.length + 0.5f, 1f);
         }
     }
 }

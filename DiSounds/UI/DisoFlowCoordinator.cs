@@ -48,6 +48,12 @@ namespace DiSounds.UI
 
             _disoClickView = disoClickView;
             _disoMusicView = disoMusicView;
+
+            _musicDir.Create();
+            _introDir.Create();
+            _outroDir.Create();
+            _clicksDir.Create();
+            _resultsDir.Create();
         }
 
         protected override async void DidActivate(bool firstActivation, bool addedToHierarchy, bool screenSystemEnabling)
@@ -137,17 +143,17 @@ namespace DiSounds.UI
             {
                 if (!_highwayTutorialSystem.Active)
                 {
-                    _highwayTutorialSystem.Add(new HighwayTutorialSystem.Blossom("Welcome To DiSounds! Hit the next arrow below to continue.", new Vector3(0f, 1.5f, 2f), Quaternion.identity));
-                    _highwayTutorialSystem.Add(new HighwayTutorialSystem.Blossom("This is the dashboard. Use it to enable/disable different modes.", new Vector3(1.4f, 1.9f, 2.2f), EulY(30), true));
-                    _highwayTutorialSystem.Add(new HighwayTutorialSystem.Blossom("This is the settings window. Use it to navigate to different settings.", new Vector3(1.4f, 0.55f, 2.2f), EulY(30), true));
-                    _highwayTutorialSystem.Add(new HighwayTutorialSystem.Blossom("This is the music player. It shows all the loaded clips for the active mode.", new Vector3(-2f, 2.45f, 1.1f), EulY(300)));
-                    _highwayTutorialSystem.Add(new HighwayTutorialSystem.Blossom("This is the enabled status of a clip.", new Vector3(-2.3f, 1.6f, 0.875f), EulY(300), true));
-                    _highwayTutorialSystem.Add(new HighwayTutorialSystem.Blossom("This is the file name of a clip.", new Vector3(-2f, 1.60f, 1.5f), EulY(300), true));
-                    _highwayTutorialSystem.Add(new HighwayTutorialSystem.Blossom("This is the action button. Use it to enable/disable a clip.", new Vector3(-1.75f, 1.6f, 1.92f), EulY(310), true));
-                    _highwayTutorialSystem.Add(new HighwayTutorialSystem.Blossom("This is the preview button. Use it to preview a clip.", new Vector3(-1.7f, 1.6f, 2.1f), EulY(310), true));
-                    _highwayTutorialSystem.Add(new HighwayTutorialSystem.Blossom("Over here, any mode specific settings will appear.", new Vector3(2f, 2.45f, 1.1f), EulY(60)));
-                    _highwayTutorialSystem.Add(new HighwayTutorialSystem.Blossom("You can learn where to add new audio clips here.", new Vector3(-0.4f, 0.95f, 2.5f), Quaternion.identity, true));
-                    _highwayTutorialSystem.Add(new HighwayTutorialSystem.Blossom("If you want to start clean, reset everything here.", new Vector3(0.3f, 0.95f, 2.5f), Quaternion.identity, true));
+                    _highwayTutorialSystem.Add(new HighwayTutorialSystem.Blossom("Welcome To DiSounds! Hit the next arrow below to continue.", new Vector3(0f, 1.5f, 2.5f), Quaternion.identity));
+                    _highwayTutorialSystem.Add(new HighwayTutorialSystem.Blossom("This is the dashboard. Use it to enable/disable different modes.", new Vector3(1.8f, 1.9f, 3.2f), EulY(30), true));
+                    _highwayTutorialSystem.Add(new HighwayTutorialSystem.Blossom("This is the settings window. Use it to navigate to different settings.", new Vector3(1.8f, 0.3f, 3.2f), EulY(30), true));
+                    _highwayTutorialSystem.Add(new HighwayTutorialSystem.Blossom("This is the music player. It shows all the loaded clips for the active mode.", new Vector3(-3f, 2.8f, 1.65f), EulY(300)));
+                    _highwayTutorialSystem.Add(new HighwayTutorialSystem.Blossom("This is the enabled status of a clip.", new Vector3(-3.3f, 1.69f, 1.07f), EulY(300), true));
+                    _highwayTutorialSystem.Add(new HighwayTutorialSystem.Blossom("This is the file name of a clip.", new Vector3(-3f, 1.69f, 1.7f), EulY(300), true));
+                    _highwayTutorialSystem.Add(new HighwayTutorialSystem.Blossom("This is the action button. Use it to enable/disable a clip.", new Vector3(-2.75f, 1.69f, 2.69f), EulY(310), true));
+                    _highwayTutorialSystem.Add(new HighwayTutorialSystem.Blossom("This is the preview button. Use it to preview a clip.", new Vector3(-2.7f, 1.69f, 3.05f), EulY(320), true));
+                    _highwayTutorialSystem.Add(new HighwayTutorialSystem.Blossom("Over here, any mode specific settings will appear.", new Vector3(3f, 2.8f, 1.65f), EulY(60)));
+                    _highwayTutorialSystem.Add(new HighwayTutorialSystem.Blossom("You can learn where to add new audio clips here.", new Vector3(-0.7f, 0.75f, 3.5f), Quaternion.identity, true));
+                    _highwayTutorialSystem.Add(new HighwayTutorialSystem.Blossom("If you want to start clean, reset everything here.", new Vector3(0.26f, 0.75f, 3.5f), Quaternion.identity, true));
                     _highwayTutorialSystem.Add(new HighwayTutorialSystem.Blossom("That's all! Enjoy the mod!", new Vector3(0f, 1.5f, 2f), Quaternion.identity));
                     _highwayTutorialSystem.Enable();
                 }

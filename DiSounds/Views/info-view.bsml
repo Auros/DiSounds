@@ -62,7 +62,7 @@
     <vertical pref-width="0.4">
       <image src="DiSounds.Resources.pixel.png" />
     </vertical>
-    <dropdown-list-setting pref-width="70" options="menu-options" apply-on-change="true" text=" " value="menu-value" bind-value="true" formatter="format-menu-options" />
+    <dropdown-list-setting id="menu-list" pref-width="70" options="menu-options" apply-on-change="true" text=" " value="menu-value" bind-value="true" formatter="format-menu-options" />
 
   </horizontal>
 

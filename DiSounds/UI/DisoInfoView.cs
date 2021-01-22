@@ -1,12 +1,15 @@
-﻿using TMPro;
+﻿using HMUI;
+using TMPro;
 using System;
 using Zenject;
 using UnityEngine;
+using IPA.Utilities;
 using System.Collections.Generic;
 using BeatSaberMarkupLanguage.Parser;
 using BeatSaberMarkupLanguage.Attributes;
 using BeatSaberMarkupLanguage.Components;
 using BeatSaberMarkupLanguage.ViewControllers;
+using BeatSaberMarkupLanguage.Components.Settings;
 
 namespace DiSounds.UI
 {
@@ -15,6 +18,7 @@ namespace DiSounds.UI
     internal class DisoInfoView : BSMLAutomaticViewController
     {
         public event Action<DisoFlowCoordinator.Action>? ActionClicked;
+        private static readonly FieldAccessor<DropdownWithTableView, ModalView>.Accessor ModalView = FieldAccessor<DropdownWithTableView, ModalView>.GetAccessor("_modalView");
 
         [Inject]
         protected readonly Config _config = null!;
@@ -40,6 +44,7 @@ namespace DiSounds.UI
         protected void Parsed()
         {
             infoWindowBackground.background.material = BeatSaberMarkupLanguage.Utilities.ImageResources.NoGlowMat;
+            FixModalPos();
         }
 
         #endregion
@@ -110,6 +115,9 @@ namespace DiSounds.UI
 
         #region Navigation BSML
 
+        [UIComponent("menu-list")]
+        protected readonly DropDownListSetting menuListDropdown = null!;
+
         private DisoFlowCoordinator.Action _menuValue;
         [UIValue("menu-value")]
         public DisoFlowCoordinator.Action MenuValue
@@ -151,6 +159,13 @@ namespace DiSounds.UI
                 DisoFlowCoordinator.Action.ResultsFailed => "Results (Failed)",
                 _ => "UNKNOWN"
             };
+        }
+
+        private void FixModalPos()
+        {
+            var dropdown = menuListDropdown.dropdown as DropdownWithTableView;
+            var modal = ModalView(ref dropdown);
+            modal.transform.localPosition = new Vector3(modal.transform.localPosition.x, 14.1f, modal.transform.localPosition.z);
         }
 
         #endregion

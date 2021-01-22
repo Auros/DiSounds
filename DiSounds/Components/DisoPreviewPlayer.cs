@@ -2,7 +2,6 @@
 using System.Linq;
 using UnityEngine;
 using SiraUtil.Tools;
-using SiraUtil.Zenject;
 
 namespace DiSounds.Components
 {
@@ -119,6 +118,11 @@ namespace DiSounds.Components
                 startTime = _lastTrueAudioLength;
                 audioClip = _active ? _defaultAudioClip : null!;
             }
+            base.CrossfadeTo(audioClip, startTime, duration, volumeScale);
+        }
+
+        public void ForceCrossfadeTo(AudioClip audioClip, float startTime, float duration, float volumeScale = 1)
+        {
             base.CrossfadeTo(audioClip, startTime, duration, volumeScale);
         }
 
