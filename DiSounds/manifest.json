@@ -13,6 +13,7 @@
   "version": "1.1.0",
   "loadBefore": [
     "BS Utils",
+    "Ini Parser",
     "BeatSaberPlus"
   ],
   "conflictsWith": {

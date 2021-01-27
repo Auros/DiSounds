@@ -18,6 +18,7 @@ namespace DiSounds.UI
     {
         private FloatingScreen _floatingScreen = null!;
         private KawaseBlurRendererSO _kawaseBlurRenderer = null!;
+        private GameplaySetupViewController _gameplaySetupViewController = null!;
         internal static readonly FieldAccessor<ImageView, float>.Accessor ImageSkew = FieldAccessor<ImageView, float>.GetAccessor("_skew");
         internal static readonly FieldAccessor<ClickableImage, bool>.Accessor Highlight = FieldAccessor<ClickableImage, bool>.GetAccessor("_isHighlighted");
         private static readonly FieldAccessor<ModalView, bool>.Accessor AnimateTheFuckingCanvasHolyShitWhatTheFuckHyperbolicMagnetismUserInterfaceLibrary = FieldAccessor<ModalView, bool>.GetAccessor("_animateParentCanvas");
@@ -54,21 +55,44 @@ namespace DiSounds.UI
         }
 
         [Inject]
-        protected async void Construct(PhysicsRaycasterWithCache raycaster, GameplaySetupViewController gameplaySetupViewController, LevelPackDetailViewController levelPackDetailViewController)
+        protected void Construct(PhysicsRaycasterWithCache raycaster, GameplaySetupViewController gameplaySetupViewController, LevelPackDetailViewController levelPackDetailViewController)
         {
+            _gameplaySetupViewController = gameplaySetupViewController;
             _playSprite = BeatSaberMarkupLanguage.Utilities.FindSpriteInAssembly("DiSounds.Resources.play.png");
             _default = BeatSaberMarkupLanguage.Utilities.FindSpriteInAssembly("DiSounds.Resources.question.png");
             _pauseSprite = BeatSaberMarkupLanguage.Utilities.FindSpriteInAssembly("DiSounds.Resources.pause.png");
             _kawaseBlurRenderer = levelPackDetailViewController.GetField<KawaseBlurRendererSO, LevelPackDetailViewController>("_kawaseBlurRenderer");
             _floatingScreen = FloatingScreen.CreateFloatingScreen(new Vector2(100f, 15f), false, Vector3.zero, Quaternion.identity);
             _floatingScreen.GetComponent<VRGraphicRaycaster>().SetField("_physicsRaycaster", raycaster);
-            await SiraUtil.Utilities.AwaitSleep(500); // wait for bsml
-            _floatingScreen.transform.SetParent(gameplaySetupViewController.transform, false);
+            _floatingScreen.transform.SetParent(_gameplaySetupViewController.transform, false);
             _floatingScreen.transform.localPosition = new Vector3(3f, 50f);
             _floatingScreen.transform.localScale = Vector3.one;
             _floatingScreen.gameObject.SetActive(false);
             _floatingScreen.gameObject.SetActive(true);
             _floatingScreen.name = "DisoPlayer";
+        }
+
+        protected void Start()
+        {
+            _gameplaySetupViewController.didActivateEvent += GameplaySetupActivated;
+        }
+
+        private void GameplaySetupActivated(bool firstActivation, bool addedToHierarchy, bool screenSystemEnabling)
+        {
+            if (_floatingScreen.transform.parent != _gameplaySetupViewController.transform)
+            {
+                _floatingScreen.transform.SetParent(_gameplaySetupViewController.transform, false);
+                _floatingScreen.transform.localPosition = new Vector3(3f, 50f);
+                _floatingScreen.transform.localScale = Vector3.one;
+                _floatingScreen.gameObject.SetActive(false);
+                _floatingScreen.gameObject.SetActive(true);
+            }
+        }
+
+        protected override void OnDestroy()
+        {
+            _gameplaySetupViewController.didActivateEvent -= GameplaySetupActivated;
+            base.OnDestroy();
         }
 
         public void Show()
