@@ -64,9 +64,9 @@ namespace DiSounds.Managers
         private void Play(UnityEngine.AudioClip clip)
         {
             if (_songPreviewPlayer is DisoPreviewPlayer diso)
-                diso.CrossfadeTo(clip, 0f, clip.length + 0.5f);
+                diso.CrossfadeTo(clip, 0f, clip.length + 1.5f);
             else
-                _songPreviewPlayer.CrossfadeTo(clip, 0f, clip.length + 0.5f);
+                _songPreviewPlayer.CrossfadeTo(clip, 0f, clip.length + 1.5f);
         }
     }
 }

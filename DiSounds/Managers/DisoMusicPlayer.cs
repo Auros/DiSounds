@@ -106,12 +106,14 @@ namespace DiSounds.Managers
         private void Paused()
         {
             _paused = true;
+            _disoPreviewPlayer.ShouldUnpause = false;
             _disoPreviewPlayer.PauseCurrentChannel();
         }
 
         private void Resumed()
         {
             _paused = false;
+            _disoPreviewPlayer.ShouldUnpause = true;
             _disoPreviewPlayer.UnPauseCurrentChannel();
         }
 

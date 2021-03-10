@@ -50,12 +50,14 @@ namespace DiSounds
                         var binding = ctx.GetComponent<ZenjectBinding>();
                         var original = (binding.Components.FirstOrDefault(x => x is SongPreviewPlayer) as SongPreviewPlayer)!;
                         var fader = original.GetComponent<FadeOutSongPreviewPlayerOnSceneTransitionStart>();
+                        var focus = original.GetComponent<SongPreviewPlayerPauseOnInputFocusLost>();
                         var newPlayer = original.Upgrade<SongPreviewPlayer, DisoPreviewPlayer>();
 
                         Container.QueueForInject(newPlayer);
                         Container.Unbind<SongPreviewPlayer>();
                         Container.Bind(typeof(SongPreviewPlayer), typeof(DisoPreviewPlayer)).To<DisoPreviewPlayer>().FromInstance(newPlayer).AsSingle();
                         fader.SetField<FadeOutSongPreviewPlayerOnSceneTransitionStart, SongPreviewPlayer>("_songPreviewPlayer", newPlayer);
+                        focus.SetField<SongPreviewPlayerPauseOnInputFocusLost, SongPreviewPlayer>("_songPreviewPlayer", newPlayer);
                     }
 
                     log?.Debug("Exposing UI Audio Manager");

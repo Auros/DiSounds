@@ -38,6 +38,8 @@ namespace DiSounds.Components
 
         public AudioClip DefaultAudioClip => _defaultAudioClip;
 
+        public bool ShouldUnpause { get; set; } = true;
+
         public float Volume
         {
             get => _volumeScale;
@@ -103,15 +105,23 @@ namespace DiSounds.Components
 
         public override void CrossFadeToDefault()
         {
+            if (PlayingDefault)
+                return;
             CrossfadeTo(_defaultAudioClip, _lastTime, -1f, true);
         }
 
         public override void CrossfadeToDefault()
         {
-            if (_audioSourceControllers == null || (_transitionAfterDelay && _activeChannel > 0 && PlayingDefault))
+            if (_audioSourceControllers == null || (!_transitionAfterDelay && _activeChannel > 0 && PlayingDefault))
                 return;
 
             CrossfadeTo(_defaultAudioClip, _lastTime, -1f, true);
+        }
+
+        public override void UnPauseCurrentChannel()
+        {
+            if (ShouldUnpause)
+                base.UnPauseCurrentChannel();
         }
     }
 }
