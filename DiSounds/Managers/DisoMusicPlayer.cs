@@ -28,7 +28,7 @@ namespace DiSounds.Managers
         private readonly DisoPreviewPlayer _disoPreviewPlayer;
         private readonly IAudioContainerService _audioContainerService;
         private readonly GameplaySetupViewController _gameplaySetupViewController;
-        private const string _content = "<clickable-text id=\"root\" on-click=\"toggle\" text=\"💿\" align=\"Center\" anchor-pos-x=\"40\" anchor-pos-y=\"0.25\" size-delta-x=\"8\" default-color=\"#ffd630\" />";
+        private const string _content = "<clickable-text id=\"root\" on-click=\"toggle\" text=\"💿\" align=\"Center\" anchor-pos-x=\"48\" anchor-pos-y=\"34.25\" size-delta-x=\"8\" default-color=\"#ffd630\" />";
 
         private Texture2D? _activeTexture;
         private string _activeName = "Unknown";
@@ -63,7 +63,7 @@ namespace DiSounds.Managers
 
         private void LoadedAudio()
         {
-            BSMLParser.instance.Parse(_content, _gameplaySetupViewController.transform.Find("HeaderPanel").gameObject, this);
+            BSMLParser.instance.Parse(_content, _gameplaySetupViewController.gameObject, this);
             root.name = "DisoPlayerToggle";
             _initialized = true;
             MoveNext();
@@ -79,7 +79,7 @@ namespace DiSounds.Managers
                 _cycleTime = 0f;
                 if (_disoPreviewPlayer.PlayingDefault)
                 {
-                    if (_disoPreviewPlayer.CurrentAudioTime + 0.5f > _disoPreviewPlayer.DefaultClip.length)
+                    if (_disoPreviewPlayer.CurrentAudioTime + 0.5f > _disoPreviewPlayer.DefaultAudioClip.length)
                     {
                         MoveNext();
                     }
@@ -106,13 +106,13 @@ namespace DiSounds.Managers
         private void Paused()
         {
             _paused = true;
-            _disoPreviewPlayer.Active = false;
+            _disoPreviewPlayer.PauseCurrentChannel();
         }
 
         private void Resumed()
         {
             _paused = false;
-            _disoPreviewPlayer.Active = true;
+            _disoPreviewPlayer.UnPauseCurrentChannel();
         }
 
         private async void MoveNext()
@@ -121,7 +121,6 @@ namespace DiSounds.Managers
             {
                 if (_currentContainer != null)
                 {
-
                     _playHistory.Push(_currentContainer.Value);
                 }
                 AudioContainer container;
@@ -135,18 +134,21 @@ namespace DiSounds.Managers
                 }
                 if (container.name == "^")
                 {
+                    _disoPreviewPlayer.NextDoRandom = false;
                     return;
                 }
                 _activeName = container.name;
                 _currentContainer = container;
                 _activeTexture = container.texture;
-                _disoPreviewPlayer.SetDefault(container.clip);
-                _disoPlayerPanel.SetPlayer(_activeName, _disoPreviewPlayer.DefaultAudioLength, _activeTexture, !_paused);
+                _disoPreviewPlayer.CrossfadeToNewDefault(container.clip);
+                _disoPreviewPlayer.NextDoRandom = false;
+                _disoPlayerPanel.SetPlayer(_activeName, _disoPreviewPlayer.DefaultAudioClip.length, _activeTexture, !_paused);
                 if (_paused)
                 {
                     _disoPlayerPanel.SetTime(0f);
                 }
             }
+            _disoPreviewPlayer.NextDoRandom = false;
         }
 
         private void MovePrevious()
@@ -155,7 +157,7 @@ namespace DiSounds.Managers
             {
                 if (_disoPreviewPlayer.CurrentAudioTime > 1f)
                 {
-                    _disoPreviewPlayer.CrossfadeTo(_disoPreviewPlayer.DefaultClip, 0f, _disoPreviewPlayer.DefaultClip.length, _disoPreviewPlayer.AmbientVolume);
+                    _disoPreviewPlayer.CrossfadeTo(_disoPreviewPlayer.DefaultAudioClip, 0f, _disoPreviewPlayer.DefaultAudioClip.length);
                     _disoPlayerPanel.SetTime(0f);
                     return;
                 }
@@ -169,8 +171,8 @@ namespace DiSounds.Managers
                     _currentContainer = record;
                     _activeName = record.name;
                     _activeTexture = record.texture;
-                    _disoPreviewPlayer.SetDefault(record.clip);
-                    _disoPlayerPanel.SetPlayer(_activeName, _disoPreviewPlayer.DefaultAudioLength, _activeTexture, !_paused);
+                    _disoPreviewPlayer.CrossfadeToNewDefault(record.clip);
+                    _disoPlayerPanel.SetPlayer(_activeName, _disoPreviewPlayer.DefaultAudioClip.length, _activeTexture, !_paused);
                 }
                 else
                 {
@@ -195,9 +197,13 @@ namespace DiSounds.Managers
             {
                 if (!_config.SaveTime)
                 {
+                    _disoPreviewPlayer.NextDoRandom = true;
                     MoveNext();
                 }
-                _disoPreviewPlayer.Active = !_paused;
+                if (!_paused)
+                    _disoPreviewPlayer.UnPauseCurrentChannel();
+                else
+                    _disoPreviewPlayer.PauseCurrentChannel();
             }
         }
 
@@ -217,7 +223,7 @@ namespace DiSounds.Managers
                 return;
             }
             _disoPlayerPanel.Show();
-            _disoPlayerPanel.SetPlayer(_activeName, _disoPreviewPlayer.DefaultAudioLength, _activeTexture, !_paused);
+            _disoPlayerPanel.SetPlayer(_activeName, _disoPreviewPlayer.DefaultAudioClip.length, _activeTexture, !_paused);
         }
 
         #endregion

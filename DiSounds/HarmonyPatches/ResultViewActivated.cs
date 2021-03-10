@@ -15,17 +15,17 @@ namespace DiSounds.HarmonyPatches
     [HarmonyPatch(typeof(ResultsViewController), "DidActivate")]
     internal class ResultViewActivated
     {
-        private static readonly MethodInfo _rootMethod = typeof(SongPreviewPlayer).GetMethod("CrossfadeTo", new Type[] { typeof(AudioClip), typeof(float), typeof(float), typeof(float) });
+        private static readonly MethodInfo _rootMethod = typeof(SongPreviewPlayer).GetMethod("CrossfadeTo", new Type[] { typeof(AudioClip), typeof(float), typeof(float) });
         private static readonly FieldInfo _songPreview = typeof(ResultsViewController).GetField("_songPreviewPlayer", BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
         private static readonly FieldInfo _fireworksController = typeof(ResultsViewController).GetField("_fireworksController", BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
         private static readonly FieldInfo _completion = typeof(ResultsViewController).GetField("_levelCompletionResults", BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
         private static readonly FieldInfo _highscore = typeof(ResultsViewController).GetField("_newHighScore", BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
-        private static readonly MethodInfo _crossfadeOverride = SymbolExtensions.GetMethodInfo(() => CrossfadeOverride(null!, null!, null!, false, null!, 0, 0, 0));
+        private static readonly MethodInfo _crossfadeOverride = SymbolExtensions.GetMethodInfo(() => CrossfadeOverride(null!, null!, null!, false, null!, 0, 0));
 
         public static FieldAccessor<ResultsViewController, bool>.Accessor HighScore = FieldAccessor<ResultsViewController, bool>.GetAccessor("_newHighScore");
         public static FieldAccessor<ResultsViewController, SongPreviewPlayer>.Accessor PreviewPlayer = FieldAccessor<ResultsViewController, SongPreviewPlayer>.GetAccessor("_songPreviewPlayer");
-        public static FieldAccessor<ResultsViewController, LevelCompletionResults>.Accessor Completion = FieldAccessor<ResultsViewController, LevelCompletionResults>.GetAccessor("_levelCompletionResults");
         public static FieldAccessor<ResultsViewController, FireworksController>.Accessor FireworkController = FieldAccessor<ResultsViewController, FireworksController>.GetAccessor("_fireworksController");
+        public static FieldAccessor<ResultsViewController, LevelCompletionResults>.Accessor Completion = FieldAccessor<ResultsViewController, LevelCompletionResults>.GetAccessor("_levelCompletionResults");
         public static FieldAccessor<FireworksController, FireworkItemController.Pool>.Accessor FireworkControllerPool = FieldAccessor<FireworksController, FireworkItemController.Pool>.GetAccessor("_fireworkItemPool");
         public static FieldAccessor<MemoryPoolBase<FireworkItemController>, DiContainer>.Accessor MemoryPoolBaseDiContainer = FieldAccessor<MemoryPoolBase<FireworkItemController>, DiContainer>.GetAccessor("_container");
 
@@ -33,7 +33,7 @@ namespace DiSounds.HarmonyPatches
         {
             if (____levelCompletionResults.levelEndStateType == LevelCompletionResults.LevelEndStateType.Failed)
             {
-                CrossfadeOverride(____songPreviewPlayer, ____fireworksController, ____levelCompletionResults, false, null!, 0f, 1f, 1f);
+                CrossfadeOverride(____songPreviewPlayer, ____fireworksController, ____levelCompletionResults, false, null!, 0f, 1f);
             } 
         }
 
@@ -73,7 +73,7 @@ namespace DiSounds.HarmonyPatches
             return codes.AsEnumerable();
         }
 
-        private static void CrossfadeOverride(SongPreviewPlayer songPreviewPlayer, FireworksController fireworksController, LevelCompletionResults completionResults, bool wasHighScore, AudioClip audioClip, float startTime, float duration, float volume)
+        private static void CrossfadeOverride(SongPreviewPlayer songPreviewPlayer, FireworksController fireworksController, LevelCompletionResults completionResults, bool wasHighScore, AudioClip audioClip, float startTime, float duration)
         {
             var player = songPreviewPlayer;
             DiContainer container = null!;
@@ -99,7 +99,9 @@ namespace DiSounds.HarmonyPatches
             else
             {
                 if (wasHighScore && audioClip != null)
-                    player.CrossfadeTo(audioClip, startTime, duration, volume);
+                {
+                    player.CrossfadeTo(audioClip, startTime, duration);
+                }
             }
         }
     }

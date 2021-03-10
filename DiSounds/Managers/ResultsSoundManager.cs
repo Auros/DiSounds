@@ -46,7 +46,7 @@ namespace DiSounds.Managers
                 if (!hasAudio)
                 {
                     if (highScore)
-                        _songPreviewPlayer.CrossfadeTo(fallback, 0f, fallback.length, 1f);
+                        _songPreviewPlayer.CrossfadeTo(fallback, 0f, fallback.length);
                     return;
                 }
 
@@ -64,9 +64,9 @@ namespace DiSounds.Managers
         private void Play(UnityEngine.AudioClip clip)
         {
             if (_songPreviewPlayer is DisoPreviewPlayer diso)
-                diso.ForceCrossfadeTo(clip, 0f, clip.length + 0.5f, 1f);
+                diso.CrossfadeTo(clip, 0f, clip.length + 0.5f);
             else
-                _songPreviewPlayer.CrossfadeTo(clip, 0f, clip.length + 0.5f, 1f);
+                _songPreviewPlayer.CrossfadeTo(clip, 0f, clip.length + 0.5f);
         }
     }
 }

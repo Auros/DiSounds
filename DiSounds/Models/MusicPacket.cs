@@ -31,7 +31,7 @@ namespace DiSounds.Models
             if (_disoPreviewPlayer != null)
             {
                 AssociatedClip = await _cachedMediaAsyncLoader.LoadAudioClipAsync(Source, _cancellationTokenSource.Token);
-                if (AssociatedClip == _disoPreviewPlayer.DefaultClip)
+                if (AssociatedClip == _disoPreviewPlayer.DefaultAudioClip)
                 {
                     return;
                 }
