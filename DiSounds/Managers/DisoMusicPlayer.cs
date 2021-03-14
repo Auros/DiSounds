@@ -28,7 +28,7 @@ namespace DiSounds.Managers
         private readonly DisoPreviewPlayer _disoPreviewPlayer;
         private readonly IAudioContainerService _audioContainerService;
         private readonly GameplaySetupViewController _gameplaySetupViewController;
-        private const string _content = "<clickable-text id=\"root\" on-click=\"toggle\" text=\"💿\" align=\"Center\" anchor-pos-x=\"48\" anchor-pos-y=\"34.25\" size-delta-x=\"8\" default-color=\"#ffd630\" />";
+        private const string _content = "<clickable-text id=\"root\" on-click=\"toggle\" text=\"💿\" align=\"Center\" anchor-pos-x=\"54\" anchor-pos-y=\"37.25\" size-delta-x=\"8\" default-color=\"#ffd630\" />";
 
         private Texture2D? _activeTexture;
         private string _activeName = "Unknown";
