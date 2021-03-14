@@ -7,10 +7,10 @@
     "BeatSaberMarkupLanguage": "^1.4.1"
   },
   "description": "Customize your sounds.",
-  "gameVersion": "1.13.4",
+  "gameVersion": "1.13.5",
   "id": "DiSounds",
   "name": "DiSounds",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "loadBefore": [
     "BS Utils",
     "Ini Parser",
