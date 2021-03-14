@@ -10,6 +10,7 @@ namespace DiSounds.Components
         private SiraLog _siraLog = null!;
         private FieldInfo _audioField = null!;
         private AudioClip _realDefault = null!;
+        private bool _transitionDidEnd;
         private float _lastTime = 0f;
 
         public override void Awake()
@@ -68,11 +69,15 @@ namespace DiSounds.Components
 
         public override void Update()
         {
+            if (!ShouldUnpause && PlayingDefault)
+                return;
+
             var fut = _timeToDefaultAudioTransition - Time.deltaTime;
             if (_transitionAfterDelay)
             {
                 if (fut <= 0f)
                 {
+                    _transitionDidEnd = true;
                     CrossfadeTo(_defaultAudioClip, _lastTime, -1f);
                 }
             }
@@ -114,8 +119,19 @@ namespace DiSounds.Components
         {
             if (_audioSourceControllers == null || (!_transitionAfterDelay && _activeChannel > 0 && PlayingDefault))
                 return;
-
             CrossfadeTo(_defaultAudioClip, _lastTime, -1f, true);
+        }
+
+        public override void CrossfadeTo(AudioClip audioClip, float startTime, float duration, bool isDefault)
+        {
+            if (_transitionDidEnd)
+            {
+                _transitionDidEnd = false;
+                startTime = _lastTime;
+                base.CrossfadeToDefault();
+            }
+            if (isDefault && ShouldUnpause)
+                base.CrossfadeTo(audioClip, startTime, duration, isDefault);
         }
 
         public override void UnPauseCurrentChannel()

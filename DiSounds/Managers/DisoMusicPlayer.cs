@@ -115,6 +115,7 @@ namespace DiSounds.Managers
             _paused = false;
             _disoPreviewPlayer.ShouldUnpause = true;
             _disoPreviewPlayer.UnPauseCurrentChannel();
+            _disoPreviewPlayer.CrossfadeToDefault();
         }
 
         private async void MoveNext()
