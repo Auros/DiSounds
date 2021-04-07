@@ -17,7 +17,7 @@ This mod is incompatible with BeatSaberPlus
 - MODE can be **Clicks**, **Intro**, **Music**, **Outro**, or **Results**. They only support .ogg files
 - If the folder doesn't exist, you can create it yourself. They are only created when you access its settings in the UI.
 - Note: Images in the Music folder that match the name of a song will load as the cover art.
-
+- THIS MOD IS NOT MADE BY ME IT IS MADE BY AUROS I JUST WANTED TO MAKE IT COMPATIBLE WITH NALULULULUNA MENU (I think I spelled it right)
 
 ## Fixed incompatibility
 - this version of the mod 𝘴𝘩𝘰𝘶𝘭𝘥 work with Nalulululuna Menu
