@@ -17,7 +17,6 @@
     "BeatSaberPlus"
   ],
   "conflictsWith": {
-    "NalulunaMenu": "*",
     "BeatSaberPlus": "*"
   }
 }
