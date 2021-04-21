@@ -1,23 +1,22 @@
 ﻿{
   "$schema": "https://raw.githubusercontent.com/bsmg/BSIPA-MetadataFileSchema/master/Schema.json",
-  "author": "Auros",
+  "author": "SkyeGamezYT",
   "dependsOn": {
     "BSIPA": "^4.1.3",
     "SiraUtil": "^2.4.0",
     "BeatSaberMarkupLanguage": "^1.4.1"
   },
   "description": "Customize your sounds.",
-  "gameVersion": "1.13.5",
+  "gameVersion": "1.14.0",
   "id": "DiSounds",
   "name": "DiSounds",
-  "version": "1.1.2",
+  "version": "1.1.3",
   "loadBefore": [
     "BS Utils",
     "Ini Parser",
     "BeatSaberPlus"
   ],
   "conflictsWith": {
-    "NalulunaMenu": "*",
     "BeatSaberPlus": "*"
   }
 }
