@@ -74,7 +74,8 @@ namespace DiSounds.Models
             {
                 _audioSourcer.clip = AssociatedClip;
                 _audioSourcer.Play();
-                await SiraUtil.Utilities.AwaitSleep(10000);
+
+                await SiraUtil.Utilities.AwaitSleep((int)Mathf.Min(AssociatedClip.length * 1000, 10000));
                 if (_audioSourcer.clip == AssociatedClip)
                 {
                     _audioSourcer.Stop();

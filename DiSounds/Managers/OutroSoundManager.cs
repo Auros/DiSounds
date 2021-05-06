@@ -20,6 +20,7 @@ namespace DiSounds.Managers
         private readonly SiraLog _siraLog;
         private readonly System.Random _random;
         private readonly AudioSource _audioSourcer;
+        private readonly SongPreviewPlayer _songPreviewPlayer;
         private readonly FadeInOutController _fadeInOutController;
         private readonly IAudioClipAsyncLoader _audioClipAsyncLoader;
         private readonly MainMenuViewController _mainMenuViewController;
@@ -27,12 +28,13 @@ namespace DiSounds.Managers
         private static readonly FieldAccessor<MainMenuViewController, Button>.Accessor Quit = FieldAccessor<MainMenuViewController, Button>.GetAccessor("_quitButton");
         private static readonly FieldAccessor<ButtonBinder, List<Tuple<Button, UnityAction>>>.Accessor BindingList = FieldAccessor<ButtonBinder, List<Tuple<Button, UnityAction>>>.GetAccessor("_bindings");
 
-        public OutroSoundManager(Config config, SiraLog siraLog, [Inject(Id = "audio.sourcer")] AudioSource audioSourcer, FadeInOutController fadeInOutController, CachedMediaAsyncLoader cachedMediaAsyncLoader, MainMenuViewController mainMenuViewController)
+        public OutroSoundManager(Config config, SiraLog siraLog, [Inject(Id = "audio.sourcer")] AudioSource audioSourcer, SongPreviewPlayer songPreviewPlayer, FadeInOutController fadeInOutController, CachedMediaAsyncLoader cachedMediaAsyncLoader, MainMenuViewController mainMenuViewController)
         {
             _config = config;
             _siraLog = siraLog;
             _audioSourcer = audioSourcer;
             _random = new System.Random();
+            _songPreviewPlayer = songPreviewPlayer;
             _fadeInOutController = fadeInOutController;
             _audioClipAsyncLoader = cachedMediaAsyncLoader;
             _mainMenuViewController = mainMenuViewController;
@@ -87,6 +89,7 @@ namespace DiSounds.Managers
                 var outro = _config.EnabledOutroSounds[_random.Next(0, _config.EnabledOutroSounds.Count)];
                 _siraLog.Debug($"Loading {outro.FullName}");
                 var audioClip = await _audioClipAsyncLoader.LoadAudioClipAsync(outro.FullName, CancellationToken.None);
+                _songPreviewPlayer.FadeOut(0.5f);
                 _audioSourcer.clip = audioClip;
                 _audioSourcer.Play();
                 _fadeInOutController.FadeOut(audioClip.length);

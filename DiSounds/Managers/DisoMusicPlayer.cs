@@ -10,6 +10,7 @@ using BeatSaberMarkupLanguage;
 using System.Collections.Generic;
 using UnityEngine.SceneManagement;
 using BeatSaberMarkupLanguage.Attributes;
+using System.Threading.Tasks;
 
 namespace DiSounds.Managers
 {
@@ -26,6 +27,7 @@ namespace DiSounds.Managers
         private readonly Stack<AudioContainer> _playFuture;
         private readonly Stack<AudioContainer> _playHistory;
         private readonly DisoPreviewPlayer _disoPreviewPlayer;
+        private readonly IntroSoundManager? _introSoundManager;
         private readonly IAudioContainerService _audioContainerService;
         private readonly GameplaySetupViewController _gameplaySetupViewController;
         private const string _content = "<clickable-text id=\"root\" on-click=\"toggle\" text=\"💿\" align=\"Center\" anchor-pos-x=\"54\" anchor-pos-y=\"37.25\" size-delta-x=\"8\" default-color=\"#ffd630\" />";
@@ -34,11 +36,12 @@ namespace DiSounds.Managers
         private string _activeName = "Unknown";
         private AudioContainer? _currentContainer;
 
-        public DisoMusicPlayer(Config config, SiraLog siraLog, DisoPlayerPanel disoPlayerPanel, DisoPreviewPlayer disoPreviewPlayer, IAudioContainerService audioContainerService, GameplaySetupViewController gameplaySetupViewController)
+        public DisoMusicPlayer(Config config, SiraLog siraLog, DisoPlayerPanel disoPlayerPanel, DisoPreviewPlayer disoPreviewPlayer, IAudioContainerService audioContainerService, GameplaySetupViewController gameplaySetupViewController, [InjectOptional] IntroSoundManager? introSoundManager)
         {
             _config = config;
             _siraLog = siraLog;
             _disoPlayerPanel = disoPlayerPanel;
+            _introSoundManager = introSoundManager;
             _disoPreviewPlayer = disoPreviewPlayer;
             _playFuture = new Stack<AudioContainer>();
             _playHistory = new Stack<AudioContainer>();
@@ -133,6 +136,9 @@ namespace DiSounds.Managers
                 }
                 else
                 {
+                    if (_introSoundManager != null && !_introSoundManager.DidPlay)
+                        while (!_introSoundManager.DidPlay)
+                            await SiraUtil.Utilities.PauseChamp;
                     container = await _audioContainerService.GetRandomContainer();
                 }
                 if (container.name == "^")

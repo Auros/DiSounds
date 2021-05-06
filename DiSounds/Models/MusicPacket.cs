@@ -5,15 +5,12 @@ using System.Threading.Tasks;
 
 namespace DiSounds.Models
 {
-    internal class MusicPacket : DisoAudioPacket
+    internal class MusicPacket : MutePreviewPacket
     {
         public FileInfo File { get; }
 
         [Inject]
         protected readonly Config _config = null!;
-
-        [InjectOptional]
-        private readonly DisoPreviewPlayer _disoPreviewPlayer = null!;
 
         public MusicPacket(FileInfo file, bool enabled) : base(file.Name, file.FullName)
         {
@@ -26,7 +23,7 @@ namespace DiSounds.Models
             _config.EnabledMusicFiles.Add(File);
         }
 
-        public override async Task Preview()
+        /*public override async Task Preview()
         {
             if (_disoPreviewPlayer != null)
             {
@@ -35,9 +32,12 @@ namespace DiSounds.Models
                 {
                     return;
                 }
+                _songPreviewPlayer.PauseCurrentChannel();
             }
             await base.Preview();
-        }
+            if (_audioSourcer.clip == AssociatedClip)
+                _songPreviewPlayer.UnPauseCurrentChannel();
+        }*/
 
         public override void Deactivated()
         {

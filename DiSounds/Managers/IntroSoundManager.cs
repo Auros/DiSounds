@@ -11,19 +11,22 @@ namespace DiSounds.Managers
     internal class IntroSoundManager : IInitializable
     {
         private bool _didPlay;
+        public bool DidPlay => _didPlay;
         private readonly Config _config;
         private readonly Random _random;
         private readonly SiraLog _siraLog;
         private readonly AudioSource _audioSourcer;
+        private readonly SongPreviewPlayer _songPreviewPlayer;
         private readonly IAudioClipAsyncLoader _audioClipAsyncLoader;
         private readonly CancellationTokenSource _cancellationTokenSource;
 
-        public IntroSoundManager(Config config, SiraLog siraLog, [Inject(Id = "audio.sourcer")] AudioSource audioSourcer, CachedMediaAsyncLoader cachedMediaAsyncLoader)
+        public IntroSoundManager(Config config, SiraLog siraLog, [Inject(Id = "audio.sourcer")] AudioSource audioSourcer, SongPreviewPlayer songPreviewPlayer, CachedMediaAsyncLoader cachedMediaAsyncLoader)
         {
             _config = config;
             _siraLog = siraLog;
             _random = new Random();
             _audioSourcer = audioSourcer;
+            _songPreviewPlayer = songPreviewPlayer;
             _audioClipAsyncLoader = cachedMediaAsyncLoader;
             _cancellationTokenSource = new CancellationTokenSource();
         }
@@ -32,9 +35,7 @@ namespace DiSounds.Managers
         {
             if (_config.EnabledIntroSounds.Count > 0 && !_didPlay)
             {
-                _didPlay = true;
                 var ourLuckyIntro = _config.EnabledIntroSounds[_random.Next(0, _config.EnabledIntroSounds.Count)];
-
                 try
                 {
                     Stopwatch stopwatch = Stopwatch.StartNew();
@@ -43,9 +44,12 @@ namespace DiSounds.Managers
                     stopwatch.Stop();
                     _siraLog.Debug($"Finished Loading Intro in {stopwatch.Elapsed} seconds");
                     await SiraUtil.Utilities.AwaitSleep(1000);
+                    _songPreviewPlayer.FadeOut(0.5f);
                     _audioSourcer.clip = audioClip;
                     _audioSourcer.Play();
                     await SiraUtil.Utilities.AwaitSleep((int)(audioClip.length * 1000));
+                    _songPreviewPlayer.CrossfadeToDefault();
+                    
                     if (_audioSourcer.clip == audioClip)
                     {
                         _audioSourcer.clip = null;
@@ -57,6 +61,7 @@ namespace DiSounds.Managers
                     _config.EnabledIntroSounds.Remove(ourLuckyIntro);
                 }
             }
+            _didPlay = true;
         }
     }
 }

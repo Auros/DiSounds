@@ -41,7 +41,7 @@ namespace DiSounds.Installers
             }
             if (config.IntroSoundsEnabled)
             {
-                Container.BindInterfacesTo<IntroSoundManager>().AsSingle();
+                Container.BindInterfacesAndSelfTo<IntroSoundManager>().AsSingle();
             }
         }
     }

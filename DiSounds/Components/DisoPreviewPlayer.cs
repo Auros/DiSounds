@@ -8,7 +8,6 @@ namespace DiSounds.Components
     public class DisoPreviewPlayer : SongPreviewPlayer
     {
         private SiraLog _siraLog = null!;
-        private FieldInfo _audioField = null!;
         private AudioClip _realDefault = null!;
         private bool _transitionDidEnd;
         private float _lastTime = 0f;
@@ -17,16 +16,15 @@ namespace DiSounds.Components
         {
             base.Awake();
             _realDefault = _defaultAudioClip;
-            _audioField = _audioSourceControllers.GetValue(0).GetType().GetField("audioSource", BindingFlags.Public | BindingFlags.Instance);
         }
 
         public override void OnEnable()
         {
             foreach (var audioSourceVolumeController in _audioSourceControllers)
             {
-                if (audioSourceVolumeController != null && ((AudioSource)_audioField.GetValue(audioSourceVolumeController)) != null)
+                if (audioSourceVolumeController != null && audioSourceVolumeController.audioSource != null)
                 {
-                    ((AudioSource)_audioField.GetValue(audioSourceVolumeController)).enabled = true;
+                    audioSourceVolumeController.audioSource.enabled = true;
                 }
             }
             _fadeSpeed = _fadeInSpeed;
@@ -52,7 +50,7 @@ namespace DiSounds.Components
             get
             {
                 if (_activeChannel < 0) return 0;
-                AudioSource audioSource = (AudioSource)_audioField.GetValue(_audioSourceControllers[_activeChannel]);
+                AudioSource audioSource = _audioSourceControllers[_activeChannel].audioSource;
                 return audioSource.time;
             }
         }
@@ -62,7 +60,7 @@ namespace DiSounds.Components
             get
             {
                 if (_activeChannel < 0) return false;
-                AudioSource audioSource = (AudioSource)_audioField.GetValue(_audioSourceControllers[_activeChannel]);
+                AudioSource audioSource = _audioSourceControllers[_activeChannel].audioSource;
                 return audioSource.clip == _defaultAudioClip;
             }
         }

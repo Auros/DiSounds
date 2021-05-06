@@ -3,7 +3,7 @@ using System.IO;
 
 namespace DiSounds.Models
 {
-    internal class ResultFCPacket : DisoAudioPacket
+    internal class ResultFCPacket : MutePreviewPacket
     {
         public FileInfo File { get; }
 

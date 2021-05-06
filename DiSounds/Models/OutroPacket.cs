@@ -1,9 +1,10 @@
 ﻿using Zenject;
 using System.IO;
+using System.Threading.Tasks;
 
 namespace DiSounds.Models
 {
-    internal class OutroPacket : DisoAudioPacket
+    internal class OutroPacket : MutePreviewPacket
     {
         public FileInfo File { get; }
 
