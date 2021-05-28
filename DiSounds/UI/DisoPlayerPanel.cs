@@ -200,7 +200,7 @@ namespace DiSounds.UI
         [UIAction("percent-formatter")]
         protected string PercentFormatter(float val)
         {
-            return val.ToString("P2");
+            return val.ToString("P0");
         }
 
         protected void OnEnable()

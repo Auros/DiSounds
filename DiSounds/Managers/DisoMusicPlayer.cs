@@ -1,16 +1,15 @@
-﻿using System;
-using Zenject;
-using DiSounds.UI;
-using UnityEngine;
-using SiraUtil.Tools;
-using DiSounds.Models;
+﻿using BeatSaberMarkupLanguage;
+using BeatSaberMarkupLanguage.Attributes;
 using DiSounds.Components;
 using DiSounds.Interfaces;
-using BeatSaberMarkupLanguage;
+using DiSounds.Models;
+using DiSounds.UI;
+using SiraUtil.Tools;
+using System;
 using System.Collections.Generic;
+using UnityEngine;
 using UnityEngine.SceneManagement;
-using BeatSaberMarkupLanguage.Attributes;
-using System.Threading.Tasks;
+using Zenject;
 
 namespace DiSounds.Managers
 {
@@ -60,8 +59,6 @@ namespace DiSounds.Managers
             _disoPlayerPanel.MovePrevious += MovePrevious;
             _disoPlayerPanel.VolumeChanged += VolumeChanged;
             SceneManager.activeSceneChanged += SceneChanged;
-
-            _disoPlayerPanel.Volume = _disoPreviewPlayer.Volume;
         }
 
         private void LoadedAudio()
@@ -151,6 +148,7 @@ namespace DiSounds.Managers
                 _activeTexture = container.texture;
                 _disoPreviewPlayer.CrossfadeToNewDefault(container.clip);
                 _disoPreviewPlayer.NextDoRandom = false;
+                _disoPlayerPanel.Volume = _disoPreviewPlayer.Volume;
                 _disoPlayerPanel.SetPlayer(_activeName, _disoPreviewPlayer.DefaultAudioClip.length, _activeTexture, !_paused);
                 if (_paused)
                 {

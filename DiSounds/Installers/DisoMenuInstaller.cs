@@ -3,6 +3,7 @@ using SiraUtil;
 using System.Linq;
 using DiSounds.UI;
 using DiSounds.Managers;
+using UnityEngine;
 
 namespace DiSounds.Installers
 {
@@ -43,6 +44,12 @@ namespace DiSounds.Installers
             {
                 Container.BindInterfacesAndSelfTo<IntroSoundManager>().AsSingle();
             }
+
+            var manager = Container.Resolve<AudioManagerSO>();
+            var gameObject = new GameObject("Audio Sourcer");
+            var clone = gameObject.AddComponent<AudioSource>();
+            clone.outputAudioMixerGroup = manager.masterMixerGroup;
+            Container.BindInstance(clone).WithId("audio.sourcer").AsSingle();
         }
     }
 }

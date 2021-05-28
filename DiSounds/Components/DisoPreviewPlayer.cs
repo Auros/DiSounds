@@ -1,5 +1,4 @@
 ﻿using SiraUtil.Tools;
-using System.Reflection;
 using UnityEngine;
 using Zenject;
 
@@ -21,13 +20,14 @@ namespace DiSounds.Components
         public override void OnEnable()
         {
             foreach (var audioSourceVolumeController in _audioSourceControllers)
-            {
                 if (audioSourceVolumeController != null && audioSourceVolumeController.audioSource != null)
-                {
                     audioSourceVolumeController.audioSource.enabled = true;
-                }
-            }
             _fadeSpeed = _fadeInSpeed;
+        }
+
+        public override void Start()
+        {
+            base.Start();
             CrossFadeToDefault();
         }
 
@@ -93,6 +93,7 @@ namespace DiSounds.Components
         {
             _siraLog = siraLog;
             Container = container;
+            CrossFadeToDefault();
         }
 
         public override void CrossfadeToNewDefault(AudioClip audioClip)

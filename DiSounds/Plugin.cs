@@ -38,17 +38,21 @@ namespace DiSounds
                     Container.BindInstance(config).AsSingle();
                 });
 
-            zenjector.OnMenu<DisoMenuInstaller>();
-            zenjector
-                .On<MenuInstaller>()
-                .Register<CommonSoundInstaller>()
+            zenjector.OnMenu<DisoMenuInstaller>()
                 .Pseudo((ctx, Container) =>
                 {
                     if (config.MusicPlayerEnabled)
                     {
                         log?.Debug("Upgrading to our DiPlayer");
-                        var binding = ctx.GetComponent<ZenjectBinding>();
-                        var original = (binding.Components.FirstOrDefault(x => x is SongPreviewPlayer) as SongPreviewPlayer)!;
+                        SongPreviewPlayer original = null!;
+                        foreach (var go in ctx.gameObject.scene.GetRootGameObjects())
+                        {
+                            original = go.GetComponent<SongPreviewPlayer>();
+                            if (original != null)
+                                break;
+                        }
+
+                        var binding = original.GetComponent<ZenjectBinding>();
                         var fader = original.GetComponent<FadeOutSongPreviewPlayerOnSceneTransitionStart>();
                         var focus = original.GetComponent<SongPreviewPlayerPauseOnInputFocusLost>();
                         var newPlayer = original.Upgrade<SongPreviewPlayer, DisoPreviewPlayer>();
@@ -56,19 +60,25 @@ namespace DiSounds
                         Container.QueueForInject(newPlayer);
                         Container.Unbind<SongPreviewPlayer>();
                         Container.Bind(typeof(SongPreviewPlayer), typeof(DisoPreviewPlayer)).To<DisoPreviewPlayer>().FromInstance(newPlayer).AsSingle();
-                        fader.SetField<FadeOutSongPreviewPlayerOnSceneTransitionStart, SongPreviewPlayer>("_songPreviewPlayer", newPlayer);
-                        focus.SetField<SongPreviewPlayerPauseOnInputFocusLost, SongPreviewPlayer>("_songPreviewPlayer", newPlayer);
+                        fader.SetField<FadeOutSongPreviewPlayerOnSceneTransitionStart, AudioPlayerBase>("_songPreviewPlayer", newPlayer);
+                        focus.SetField<SongPreviewPlayerPauseOnInputFocusLost, AudioPlayerBase>("_songPreviewPlayer", newPlayer);
                     }
-
+                });
+            zenjector
+                .On<ColorManagerInstaller>()
+                .Register<CommonSoundInstaller>()
+                .Pseudo((ctx, Container) =>
+                {
                     log?.Debug("Exposing UI Audio Manager");
-                    var audioManager = ctx.GetRootGameObjects().ElementAt(0).GetComponentInChildren<BasicUIAudioManager>();
-                    Container.Bind<BasicUIAudioManager>().FromInstance(audioManager).AsSingle();
-
-                    var gameObject = new GameObject("Audio Sourcer");
-                    var mixer = audioManager.GetField<AudioSource, BasicUIAudioManager>("_audioSource").outputAudioMixerGroup;
-                    var clone = gameObject.AddComponent<AudioSource>();
-                    clone.outputAudioMixerGroup = mixer;
-                    Container.BindInstance(clone).WithId("audio.sourcer").AsSingle();
+                    foreach (var rootObject in ctx.GetRootGameObjects())
+                    {
+                        var audioManager = rootObject.GetComponentInChildren<BasicUIAudioManager>();
+                        if (audioManager != null)
+                        {
+                            Container.Bind<BasicUIAudioManager>().FromInstance(audioManager).AsSingle();
+                            break;
+                        }
+                    }
                 })
                 .Initialized((ctx, Container) =>
                 {
