@@ -10,7 +10,7 @@
   "gameVersion": "1.16.2",
   "id": "DiSounds",
   "name": "DiSounds",
-  "version": "1.1.4",
+  "version": "1.1.4-beta",
   "loadBefore": [
     "BS Utils",
     "Ini Parser",
