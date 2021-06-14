@@ -4,6 +4,8 @@ using System.Linq;
 using DiSounds.UI;
 using DiSounds.Managers;
 using UnityEngine;
+using IPA.Utilities;
+using UnityEngine.Audio;
 
 namespace DiSounds.Installers
 {
@@ -48,7 +50,7 @@ namespace DiSounds.Installers
             var manager = Container.Resolve<AudioManagerSO>();
             var gameObject = new GameObject("Audio Sourcer");
             var clone = gameObject.AddComponent<AudioSource>();
-            clone.outputAudioMixerGroup = manager.masterMixerGroup;
+            clone.outputAudioMixerGroup = manager.GetField<AudioMixer, AudioManagerSO>("_audioMixer").outputAudioMixerGroup;
             Container.BindInstance(clone).WithId("audio.sourcer").AsSingle();
         }
     }

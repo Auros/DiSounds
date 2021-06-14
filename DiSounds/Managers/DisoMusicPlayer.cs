@@ -164,7 +164,7 @@ namespace DiSounds.Managers
             {
                 if (_disoPreviewPlayer.CurrentAudioTime > 1f)
                 {
-                    _disoPreviewPlayer.CrossfadeTo(_disoPreviewPlayer.DefaultAudioClip, 0f, _disoPreviewPlayer.DefaultAudioClip.length);
+                    _disoPreviewPlayer.CrossfadeTo(_disoPreviewPlayer.DefaultAudioClip, _disoPreviewPlayer.Volume, 0f, _disoPreviewPlayer.DefaultAudioClip.length);
                     _disoPlayerPanel.SetTime(0f);
                     return;
                 }

@@ -28,7 +28,7 @@ namespace DiSounds.Components
         public override void Start()
         {
             base.Start();
-            CrossFadeToDefault();
+            CrossfadeToDefault();
         }
 
         public bool NextDoRandom { private get; set; }
@@ -76,7 +76,7 @@ namespace DiSounds.Components
                 if (fut <= 0f)
                 {
                     _transitionDidEnd = true;
-                    CrossfadeTo(_defaultAudioClip, _lastTime, -1f);
+                    CrossfadeTo(_defaultAudioClip, Volume, _lastTime, -1f);
                 }
             }
             if (PlayingDefault)
@@ -93,7 +93,7 @@ namespace DiSounds.Components
         {
             _siraLog = siraLog;
             Container = container;
-            CrossFadeToDefault();
+            CrossfadeToDefault();
         }
 
         public override void CrossfadeToNewDefault(AudioClip audioClip)
@@ -104,24 +104,19 @@ namespace DiSounds.Components
             _defaultAudioClip = audioClip;
             var time = NextDoRandom ? Mathf.Max(Random.Range(0f, _defaultAudioClip.length - 0.1f)) : 0f;
             NextDoRandom = false;
-            CrossfadeTo(audioClip, time, -1f, true);
-        }
-
-        public override void CrossFadeToDefault()
-        {
-            if (PlayingDefault)
-                return;
-            CrossfadeTo(_defaultAudioClip, _lastTime, -1f, true);
+            CrossfadeTo(audioClip, -4f, time, -1f, true);
         }
 
         public override void CrossfadeToDefault()
         {
+            if (PlayingDefault)
+                return;
             if (_audioSourceControllers == null || (!_transitionAfterDelay && _activeChannel > 0 && PlayingDefault))
                 return;
-            CrossfadeTo(_defaultAudioClip, _lastTime, -1f, true);
+            CrossfadeTo(_defaultAudioClip, -4f, _lastTime, -1f, true);
         }
 
-        public override void CrossfadeTo(AudioClip audioClip, float startTime, float duration, bool isDefault)
+        public override void CrossfadeTo(AudioClip audioClip, float volume, float startTime, float duration, bool isDefault)
         {
             if (_transitionDidEnd)
             {
@@ -130,7 +125,7 @@ namespace DiSounds.Components
                 base.CrossfadeToDefault();
             }
             if (isDefault && ShouldUnpause)
-                base.CrossfadeTo(audioClip, startTime, duration, isDefault);
+                base.CrossfadeTo(audioClip, volume, startTime, duration, isDefault);
         }
 
         public override void UnPauseCurrentChannel()
